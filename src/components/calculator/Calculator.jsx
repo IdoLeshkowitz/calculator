@@ -7,7 +7,7 @@ import History from "./history/History";
 function Calculator() {
   const [calc, setCalc] = useState("");
   const [result, setResult] = useState("");
-  const ops = ["/", "*", "+", "-", "."];
+  const ops = ["/", "*", "+", "-"];
 
   //digit / ops clicked handler
   const updateCalc = (value) => {
@@ -33,7 +33,11 @@ function Calculator() {
       return;
     }
 
-    //case 3 a digit was typed
+    // //case 3 a decimal point was typed
+    // if (value==='.'){
+
+    // }
+    //case 4 a digit was typed
     setCalc(calc + value);
   };
 

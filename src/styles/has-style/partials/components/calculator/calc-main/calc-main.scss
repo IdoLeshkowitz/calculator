@@ -1,12 +1,8 @@
 @import './pad/pad.scss';
-@import './right-panel/right-panel.scss';
+@import './main-end/main-end.scss';
+@import './main-start/main-start.scss';
 .main-box{
-@include right-panel-grid-areas;
-@include left-panel-grid-areas;
-@include pad-grid-areas;
-height:100vh;
 direction: rtl;
-width:100vw;
 display: grid;
  grid-template-areas: 'settings header header header i'
 'backspace  display display display theme'
@@ -18,4 +14,8 @@ display: grid;
 'equals space3 space3 space3  space2';
 grid-template-columns: 1fr repeat(3, 1.5fr) 1fr;
 grid-template-rows: 0.2fr repeat(6,1fr) 0.7fr;
+row-gap: 0.001rem;
+column-gap: 0.001rem;
+
+
 }

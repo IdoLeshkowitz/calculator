@@ -1,19 +1,6 @@
 #root{
-    --color-white-1:hsla(0, 1%, 69%, 0.692);
-    --color-blue-1:rgb(120, 120, 201);
-    --color-yellow-1:yellow;
+    --color-white-1:#f2f2f2;
+    --color-blue-1:#d9e2f3;
+    --color-yellow-1:#ffff00;
     --color-orange-1:#f7cbac;
-    & [class *="blue"]{
-        background-color: var(--color-blue-1);
-    } 
-    & [class  *= "yellow"]{
-        background-color:var(--color-yellow-1) ;
-    }
-    & [class  *= "white"]{
-        background-color:var(--color-white-1) ;
-    }
-    & [class *= "orange"]{
-        background-color: var(--color-orange-1);
-    }
-    
 }

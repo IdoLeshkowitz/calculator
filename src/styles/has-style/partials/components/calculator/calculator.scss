@@ -1,1 +1,24 @@
+//sciense
+
+
+//main
 @import './calc-main/calc-main.scss';
+
+//history
+
+
+.calc-box{
+    & [class *="blue"]{
+        background-color: var(--color-blue-1);
+    } 
+    & [class  *= "yellow"]{
+        background-color:var(--color-yellow-1) ;
+    }
+    & [class  *= "white"]{
+        background-color:var(--color-white-1) ;
+    }
+    & [class *= "orange"]{
+        background-color: var(--color-orange-1);
+    }
+    
+}
