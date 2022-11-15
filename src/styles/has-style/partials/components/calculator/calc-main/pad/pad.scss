@@ -1,8 +1,41 @@
-@import './display/display.scss';
-@import './header/pad-header.scss';
-@import './c/c.scss';
-.pad-box{
-    // @include grid-pad;
-    //   //display
-  
+// @include grid-pad;
+//   //display
+.main-box {
+  & .header {
+    grid-area: header;
+  }
+  & .display {
+    grid-area: display;
+  }
+  & .c {
+    grid-area: c;
+  }
+  & .minusplus {
+    grid-area: minusplus;
+  }
+  & .zero {
+    grid-area: zero;
+  }
+  & .decimal {
+    grid-area: decimal;
+  }
+}
+
+.c {
+  @include grid-c;
+  grid-row: 3;
+  grid-column: 1 / span 3;
+}
+.display-box {
+  @include grid-display;
+  padding-right: var(--padding-right);
+  border: var(--border-1);
+}
+
+.pad-header {
+  grid-row: 1;
+  grid-column: 1/-1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
