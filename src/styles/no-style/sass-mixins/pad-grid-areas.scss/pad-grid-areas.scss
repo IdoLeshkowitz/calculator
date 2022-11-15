@@ -1,0 +1,20 @@
+@mixin pad-grid-areas{
+    .header{
+        grid-area: header;
+    }
+    .display{
+        grid-area: display;
+    }
+    .c{
+       grid-area: c; 
+    }
+    .minusplus{
+        grid-area: minusplus;
+    }
+    .zero{
+        grid-area: zero;
+    }
+    .decimal{
+        grid-area: decimal;
+    }
+}

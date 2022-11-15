@@ -1,0 +1,12 @@
+@mixin grid-pad{
+    display: grid;
+    grid-template-columns: repeat(3 ,1fr);
+    grid-template-rows: repeat(7, 1fr) 0.7fr;
+    
+    .button-c{
+        grid-column: span 3;
+    }
+    & [span="3"]{
+        grid-column: span 3;
+    }
+}

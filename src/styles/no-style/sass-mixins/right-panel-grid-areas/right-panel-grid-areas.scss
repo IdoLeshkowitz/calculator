@@ -1,0 +1,25 @@
+@mixin right-panel-grid-areas{
+    .settings{
+        grid-area: settings;
+
+    }
+    .backspace{
+        grid-area:backspace;
+    }
+    .divide{
+        grid-area: divide;
+    }
+    .multi{
+        grid-area: multi;
+    }
+    .minus{
+        grid-area: minus;
+    }
+    .equals{
+        grid-area: equals;
+    }
+    .plus{
+        grid-area: plus;
+    }
+
+}

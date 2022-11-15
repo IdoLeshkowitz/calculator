@@ -1,0 +1,7 @@
+.display-box{
+    @include grid-display;
+    grid-row: 2 ;
+    grid-column:  1/-1;
+    padding-right: var(--padding-right);
+    border:var(--border-1)
+}
