@@ -1,3 +1,5 @@
+@import './../colors/color.scss';
 #root{
     --border-1:1px solid black;
+    --outline-1: 1px solid var(--color-black-2);
 }

@@ -1,24 +1,38 @@
 //sciense
 
-
 //main
-@import './calc-main/calc-main.scss';
+@import "./calc-main/calc-main.scss";
 
 //history
 
+.calc-box {
+  & div {
+    outline: var(--outline-1);
+    margin: 0;
+    border: none;
+   //cell display settings
+    & div {
+         
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    }
 
-.calc-box{
-    & [class *="blue"]{
-        background-color: var(--color-blue-1);
-    } 
-    & [class  *= "yellow"]{
-        background-color:var(--color-yellow-1) ;
-    }
-    & [class  *= "white"]{
-        background-color:var(--color-white-1) ;
-    }
-    & [class *= "orange"]{
-        background-color: var(--color-orange-1);
-    }
-    
+  }
+
+  height: 100%;
+  width: 100%;
+  & [class*="blue"] {
+    background: linear-gradient(0.25turn, var(--color-blue-1) , var(--color-blue-2));
+    //background-color: var(--color-blue-1);
+  }
+  & [class*="yellow"] {
+    background-color: var(--color-yellow-1);
+  }
+  & [class*="white"] {
+    background-color: var(--color-white-1);
+  }
+  & [class*="orange"] {
+    background-color: var(--color-orange-1);
+  }
 }

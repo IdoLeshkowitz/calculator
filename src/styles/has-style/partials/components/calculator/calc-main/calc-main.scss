@@ -2,6 +2,12 @@
 @import './main-end/main-end.scss';
 @import './main-start/main-start.scss';
 .main-box{
+    //positioning
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left:0;
+    right:0;
 direction: rtl;
 display: grid;
  grid-template-areas: 'settings header header header i'
@@ -13,9 +19,5 @@ display: grid;
 'equals decimal zero minusplus space2'
 'equals space3 space3 space3  space2';
 grid-template-columns: 1fr repeat(3, 1.5fr) 1fr;
-grid-template-rows: 0.2fr repeat(6,1fr) 0.7fr;
-row-gap: 0.001rem;
-column-gap: 0.001rem;
-
-
+grid-template-rows: 0.5fr repeat(6, minmax(20px, 1fr)) 0.5fr;
 }
