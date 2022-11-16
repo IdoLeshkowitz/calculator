@@ -21,8 +21,7 @@ function Pad(props) {
 
   return (
     <>
-      <h1 className="pad-headern header">My Calculator</h1>
-
+    <div className="pad-header header">My Calculator</div>
       {/* display */}
       <div className="display-box yellow display">
         {props.result ? <span>({props.result})</span> : ""}

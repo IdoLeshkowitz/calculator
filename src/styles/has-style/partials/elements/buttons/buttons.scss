@@ -3,10 +3,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    box-sizing: border-box;
-    border: 1px solid black;
-
-    &:hover {
+    box-sizing:content-box;
+    border: none;
+    outline: var(--outline-1);
+    & .icon{
+      width: 40%;
+      height:40%;
+      color:var(--color-black-1)
     }
   }
 }
+
