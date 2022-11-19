@@ -2,6 +2,11 @@ import React from "react";
 import { useState, useReducer } from "react";
 import OperationButton from "./operationButton/OperationButton";
 import DigitButton from "./digitButton/DigitButton";
+import { TbArrowBackUp, TbColumnInsertLeft } from "react-icons/tb";
+import { FcSettings } from "react-icons/fc";
+import { FiDivide } from "react-icons/fi";
+import { CgAsterisk } from "react-icons/cg";
+import {AiOutlinePlus} from 'react-icons/ai'
 
 export const ACTIONS = {
   ADD_DIGIT: "add-digit",
@@ -123,12 +128,14 @@ function evaluate({ currentOperand, previousOperand, operation }) {
 const INTEGER_FORMATTER = new Intl.NumberFormat("en-us", {
   maximumFractionDigits: 0,
 });
+
 function formatOperand(operand) {
   if (operand == null) return;
   const [integer, decimal] = operand.split(".");
   if (decimal == null) return INTEGER_FORMATTER.format(integer);
   return `${INTEGER_FORMATTER.format(integer)}.${decimal}`;
 }
+
 function Calculator() {
   const [{ currentOperand, previousOperand, operation }, dispatch] = useReducer(
     reducer,
@@ -139,56 +146,63 @@ function Calculator() {
     let nums = [
       {
         digit: 0,
-        gridArea: 27,
+        gridArea: "aa",
         className: "button-white",
       },
       {
         digit: 1,
-        gridArea: 21,
+        gridArea: "u",
         className: "button-white",
       },
       {
         digit: 2,
-        gridArea: 22,
+        gridArea: "v",
         className: "button-white",
       },
       {
         digit: 3,
-        gridArea: 23,
+        gridArea: "w",
         className: "button-white",
       },
       {
         digit: 4,
-        gridArea: 16,
+        gridArea: "p",
         className: "button-white",
       },
       {
         digit: 5,
-        gridArea: 17,
+        gridArea: "q",
         className: "button-white",
       },
       {
         digit: 6,
-        gridArea: 18,
+        gridArea: "r",
         className: "button-white",
       },
       {
         digit: 7,
-        gridArea: 11,
+        gridArea: "k",
         className: "button-white",
       },
       {
         digit: 8,
-        gridArea: 12,
+        gridArea: "l",
         className: "button-white",
       },
       {
         digit: 9,
-        gridArea: 13,
+        gridArea: "m",
         className: "button-white",
       },
     ];
-    return nums.map((num) => <DigitButton digit={num.digit} className={num.className} gridArea={num.gridArea} dispatch={dispatch} />);
+    return nums.map((num) => (
+      <DigitButton
+        digit={num.digit}
+        className={num.className}
+        gridArea={num.gridArea}
+        dispatch={dispatch}
+      />
+    ));
   };
   const createOperators = () => {
     const operators = [
@@ -196,21 +210,26 @@ function Calculator() {
         operation: "÷",
         className: "button-orange",
         gridArea: "i",
+        displayed:<FiDivide className="icon"/>
       },
       {
         operation: "-",
         className: "button-orange",
         gridArea: "s",
+        displayed:'-'
       },
       {
         operation: "*",
         className: "button-orange",
         gridArea: "n",
+        displayed:<CgAsterisk className="icon"/>
       },
       {
         operation: "+",
         className: "button-orange",
         gridArea: "x",
+        displayed:<AiOutlinePlus className="icon"/>
+
       },
     ];
     return operators.map((operator) => (
@@ -219,9 +238,14 @@ function Calculator() {
         dispatch={dispatch}
         className={operator.className}
         gridArea={operator.gridArea}
+        displayed={operator.displayed}
       />
     ));
   };
+
+  const createFunctions =()=>{
+
+  }
   return (
     <div className="calc-box">
       <div className="main-box">
@@ -234,94 +258,20 @@ function Calculator() {
         </div>
 
         {/* digits-----> */}
-        {/* {createDigits()} */}
+        {createDigits()}
 
         {/* operatores-----> */}
         {createOperators()}
+
+        {/* backspace ---->*/}
+        <div className="button-blue" grid-area='f' onClick={()=>dispatch({type:ACTIONS.DELETE_DIGIT})}><TbArrowBackUp className="icon" /></div>
+
+        {/* clear button----> */}
+        <div className="button-blue" grid-area='h' onClick={()=>dispatch({type:ACTIONS.CLEAR})}>C</div>
+
       </div>
     </div>
   );
 }
 
 export default Calculator;
-
-//   //gets the value of the key and its type and calls its handler function
-//   const keyHandlers = (key, keyType) => {
-//     //key is digit handler
-//     const keyIsDigit = (key) => {
-//       //append key to curr
-//       setCurr(curr + key);
-//     };
-//     //key is ops handler
-//     const keyIsOps = (key) => {
-//       let currLastKeyType =  getKeyType(curr.slice(-1));
-//       const currLastIsDigit = () => {
-//         // if curr last key is a digit update prev and set new key as curr
-//         setPrev(eval(prev + curr));
-//         setCurr(key);
-//       };
-//       const currLastIsOps = () => {
-//         setCurr(curr.substring(0,-1)+key);
-//       };
-//       const currLastIsNone = () => {
-//         setCurr(key);
-//       };
-//       const handlers = {
-//         "ops": currLastIsOps,
-//         "digit": currLastIsDigit,
-//         "none": currLastIsNone,
-//       };
-//       handlers[currLastKeyType]();
-//     };
-
-//     //key is clear handler
-//     const keyIsC = (key) => {
-//       const clearCalc = () => setCurr("+");
-//       const clearResult = () => setPrev("0");
-//       clearCalc();
-//       clearResult();
-//     };
-//     //key is backSpace
-//     const keyIsBackSpace = (key) => {
-//       const currLastType=  getKeyType(curr.slice(-1));
-//       if (currLastType ==="digit"){
-//         setCurr(curr.slice(0,-1));
-//       }
-//     };
-//     //key is minusPlus
-//     const keyIsMinusPlus = (key) => {
-//       //converts curr from non negetive to negtive and the opposite
-//       const currLastType=  getKeyType(curr.slice(-1));
-//       if (currLastType ==="digit"){
-//         setCurr(curr * -1);
-//       }
-
-//     };
-//     //key is =
-//     const keyIsEquals = (key) => {
-//       const lastEnteredKeyType = getKeyType(curr.slice(-1));
-//       switch (lastEnteredKeyType) {
-//         case "ops":
-//           setPrev(eval(prev + curr + prev).toString());
-//           setCurr("0");
-//         //   case "digit":
-//         //     setPrev(eval(prev + curr).toString());
-//         //     setCurr("0");
-//       }
-//     };
-
-//     const handlers = {
-//       digit: keyIsDigit,
-//       ops: keyIsOps,
-//       c: keyIsC,
-//       backSpace: keyIsBackSpace,
-//       minusPlus: keyIsMinusPlus,
-//       equals: keyIsEquals,
-//     };
-//     handlers[keyType](key);
-//   };
-
-//   //keeps the type of the current key
-//   const keyType = getKeyType(key);
-//   keyHandlers(key, keyType);
-// };

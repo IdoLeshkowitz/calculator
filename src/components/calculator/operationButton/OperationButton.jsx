@@ -1,6 +1,6 @@
 import React from "react";
 import { ACTIONS } from "../Calculator";
-function OperationButton({ dispatch, operation, gridArea, className }) {
+function OperationButton({ dispatch, operation, gridArea, className,displayed }) {
   return (
     <div
       className={className}
@@ -9,7 +9,7 @@ function OperationButton({ dispatch, operation, gridArea, className }) {
         dispatch({ type: ACTIONS.CHOOSE_OPERATION, payload: { operation } })
       }
     >
-      {operation}
+      {displayed}
     </div>
   );
 }
