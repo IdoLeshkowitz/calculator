@@ -9,7 +9,59 @@ function Calculator() {
   const [result, setResult] = useState("");
   const ops = ["/", "*", "+", "-"];
 
-  //digit / ops clicked handler
+  //key entered gets the key that was entered by user and calls the right function with its value
+  const keyEntered = (key) => {
+    // gets the value of the key returns its type stringify
+    const getKeyType = (key) => {
+      const keys = {
+        ops: ["/", "*", "+", "-"],
+        backspace: ["backspace"],
+        c: ["c"],
+        equals: ["="],
+        minusPlus: ["-+"],
+        decimal: ["."],
+        digit:Array.from(Array(10).keys()).map(digit=>digit.toString()),
+      };
+      for (const type in keys) {
+        if (keys[type].includes(key)) {
+          return type;
+        }
+      }
+    };
+
+    //gets the value of the key and its type and calls its handler function 
+    const keyHandlers =(key,keyType)=>{
+      
+      //key is digit handler
+      const keyIsDigit =(key) =>{
+        setCalc(calc+key);
+      }
+      const handlers ={
+        digit :keyIsDigit
+      }
+      handlers[keyType](key);
+    }
+
+    //keeps the type of the current key 
+    const keyType= getKeyType(key);
+    keyHandlers(key,keyType);
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
   const updateCalc = (value) => {
     //case 1 an operator typed
     if (ops.includes(value)) {
@@ -47,18 +99,16 @@ function Calculator() {
     setCalc("");
   };
 
-  // backspace handler 
-  const backSpace=()=>{
-    setCalc(calc.slice(0,-1));
-  }
+  // backspace handler
+  const backSpace = () => {
+    setCalc(calc.slice(0, -1));
+  };
   return (
     <div className="calc-box">
       <Main
-        updateCalc={updateCalc}
+        keyEntered={keyEntered}
         calc={calc}
         result={result}
-        resetAll={resetAll}
-        backSpace={backSpace}
       ></Main>
     </div>
   );

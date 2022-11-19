@@ -12,37 +12,37 @@ function RightPanel(props) {
       </div>
       <div
         className="button-blue right-panel backspace"
-        onClick={() => props.backSpace()}
+        onClick={() => props.keyEntered("backspace")}
       >
         <TbArrowBackUp className="icon" />
       </div>
       <div
         className="button-blue right-panel divide"
-        onClick={() => props.updateCalc("/")}
+        onClick={() => props.keyEntered("/")}
       >
         <FiDivide className="icon" />
       </div>
       <div
         className="button-blue right-panel multi"
-        onClick={() => props.updateCalc("*")}
+        onClick={() => props.keyEntered("*")}
       >
         <CgAsterisk className="icon" />
       </div>
       <div
         className="button-blue right-panel minus"
-        onClick={() => props.updateCalc("-")}
+        onClick={() => props.keyEntered("-")}
       >
         -
       </div>
       <div
         className="button-blue right-panel plus"
-        onClick={() => props.updateCalc("+")}
+        onClick={() => props.keyEntered("+")}
       >
         +
       </div>
       <div
         className="button-blue right-panel equals"
-        onClick={() => props.updateCalc("=")}
+        onClick={() => props.keyEntered("=")}
       >
         =
       </div>

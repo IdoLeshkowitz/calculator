@@ -8,8 +8,8 @@ function Main(props) {
   return (
     <div className="main-box">
         
-        <RightPanel updateCalc={props.updateCalc} backSpace={props.backSpace}/>
-      <Pad updateCalc={props.updateCalc} calc={props.calc} result={props.result} resetAll={props.resetAll}/>
+        <RightPanel keyEntered={props.keyEntered}/>
+      <Pad  calc={props.calc} result={props.result} keyEntered={props.keyEntered}/>
       <LeftPanel/>
       
     </div>
