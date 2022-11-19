@@ -12,7 +12,7 @@ function RightPanel(props) {
       </div>
       <div
         className="button-blue right-panel backspace"
-        onClick={() => props.keyEntered("backspace")}
+        onClick={() => props.keyEntered("backSpace")}
       >
         <TbArrowBackUp className="icon" />
       </div>

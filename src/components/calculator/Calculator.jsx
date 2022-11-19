@@ -5,8 +5,8 @@ import Sciense from "./sciense/Sciense";
 import History from "./history/History";
 
 function Calculator() {
-  const [calc, setCalc] = useState("");
-  const [result, setResult] = useState("");
+  const [calc, setCalc] = useState("0");
+  const [result, setResult] = useState("0");
   const ops = ["/", "*", "+", "-"];
 
   //key entered gets the key that was entered by user and calls the right function with its value
@@ -15,12 +15,12 @@ function Calculator() {
     const getKeyType = (key) => {
       const keys = {
         ops: ["/", "*", "+", "-"],
-        backspace: ["backspace"],
+        backSpace: ["backSpace"],
         c: ["c"],
         equals: ["="],
         minusPlus: ["-+"],
         decimal: ["."],
-        digit:Array.from(Array(10).keys()).map(digit=>digit.toString()),
+        digit: Array.from(Array(10).keys()).map((digit) => digit.toString()),
       };
       for (const type in keys) {
         if (keys[type].includes(key)) {
@@ -29,74 +29,59 @@ function Calculator() {
       }
     };
 
-    //gets the value of the key and its type and calls its handler function 
-    const keyHandlers =(key,keyType)=>{
-      
+    //gets the value of the key and its type and calls its handler function
+    const keyHandlers = (key, keyType) => {
       //key is digit handler
-      const keyIsDigit =(key) =>{
-        setCalc(calc+key);
-      }
-      const handlers ={
-        digit :keyIsDigit
-      }
+      const keyIsDigit = (key) => {
+        // if calc is "0" replace initial value with key
+        if (calc === "0") {
+          setCalc(key);
+          return;
+        }
+        // else append key to calc
+        setCalc(calc + key);
+      };
+      //key is ops handler
+      const keyIsOps = (key) => {
+        //holds the last entered key type
+        const lastEnteredKeyType = getKeyType(calc.slice(-1));
+        //if calc is empty return
+        if (calc == "") return;
+        //else switch the last entered key type
+        switch (lastEnteredKeyType) {
+          //if last entered key is digit append key to calc
+          case "digit":
+            setCalc(calc + key);
+            break;
+          //if last entered key is ops replace the last operator with the new one entered
+          case "ops":
+            setCalc(calc.slice(0, -1) + key);
+            break;
+        }
+      };
+      //key is clear handler
+      const keyIsC = (key) => {
+        const clearCalc = () => setCalc("0");
+        const clearResult = () => setResult("0");
+        clearCalc();
+        clearResult();
+      };
+      const keyIsBackSpace = (key) => {
+        setCalc(calc.slice(0, -1));
+      };
+
+      const handlers = {
+        digit: keyIsDigit,
+        ops: keyIsOps,
+        c: keyIsC,
+        backSpace: keyIsBackSpace,
+      };
       handlers[keyType](key);
-    }
+    };
 
-    //keeps the type of the current key 
-    const keyType= getKeyType(key);
-    keyHandlers(key,keyType);
-  };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  const updateCalc = (value) => {
-    //case 1 an operator typed
-    if (ops.includes(value)) {
-      //if calc is empty return
-      if (calc == "") return;
-      //if last entered value is operation return
-      if (ops.includes(calc.slice(-1))) return;
-      //if the operator is '.' check if its the first otherwise return
-      if (value == "." && calc.includes(".")) return;
-      //else update calc
-      setCalc(calc + value);
-      return;
-    }
-
-    //case 2 - '=' was typed
-    if (value === "=") {
-      // if calc is empty or if last enterd value is ops return
-      if (ops.includes(calc.slice(-1)) || calc === "") return;
-      //otherwise update result
-      setResult(eval(calc + result).toString());
-      return;
-    }
-
-    // //case 3 a decimal point was typed
-    // if (value==='.'){
-
-    // }
-    //case 4 a digit was typed
-    setCalc(calc + value);
-  };
-
-  // cc button handler
-  const resetAll = () => {
-    setResult("");
-    setCalc("");
+    //keeps the type of the current key
+    const keyType = getKeyType(key);
+    keyHandlers(key, keyType);
   };
 
   // backspace handler
@@ -105,11 +90,7 @@ function Calculator() {
   };
   return (
     <div className="calc-box">
-      <Main
-        keyEntered={keyEntered}
-        calc={calc}
-        result={result}
-      ></Main>
+      <Main keyEntered={keyEntered} calc={calc} result={result}></Main>
     </div>
   );
 }
