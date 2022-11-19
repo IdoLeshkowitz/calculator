@@ -19,15 +19,21 @@ function Pad(props) {
     return output;
   };
 
+  const renderDisplay = () => {
+    return (
+      
+      <div className="display-box yellow display">
+        curr:{props.curr} <br /> prev:{props.prev}
+      </div>
+    );
+  };
+
   return (
     <>
       <div className="pad-header header">My Calculator</div>
       {/* display */}
       {/* ///////////////////////////////////////////////////////// */}
-      <div className="display-box yellow display">
-        {props.result ? <span>({props.result})</span> : ""}
-        {props.calc || "0"}
-      </div>
+      {renderDisplay()}
       {/* c */}
       {/* ///////////////////////////////////////////////////////// */}
       <div
@@ -54,7 +60,9 @@ function Pad(props) {
       <div
         className="button-blue minusplus"
         onClick={() => props.keyEntered("-+")}
-      >+-</div>
+      >
+        +-
+      </div>
     </>
   );
 }

@@ -1,10 +1,20 @@
-import React from "react";
-import { TbArrowBackUp } from "react-icons/tb";
+import React, { useEffect } from "react";
+import { TbArrowBackUp, TbColumnInsertLeft } from "react-icons/tb";
 import { FcSettings } from "react-icons/fc";
 import { FiDivide } from "react-icons/fi";
 import { CgAsterisk } from "react-icons/cg";
 
 function RightPanel(props) {
+  const getOpsStyle = (operation) => {
+    let classes = "button-blue right-panel";
+    if (true){
+      console.log(props.curr);
+      
+      classes+='selected';
+    }
+    return classes;
+  };
+
   return (
     <>
       <div className="button-blue right-panel settings">
@@ -17,32 +27,24 @@ function RightPanel(props) {
         <TbArrowBackUp className="icon" />
       </div>
       <div
-        className="button-blue right-panel divide"
+        //operators---->
+        className={getOpsStyle("/") + "divide"}
         onClick={() => props.keyEntered("/")}
       >
         <FiDivide className="icon" />
       </div>
-      <div
-        className="button-blue right-panel multi"
-        onClick={() => props.keyEntered("*")}
-      >
+      <div className="multi" onClick={() => props.keyEntered("*")}>
         <CgAsterisk className="icon" />
       </div>
-      <div
-        className="button-blue right-panel minus"
-        onClick={() => props.keyEntered("-")}
-      >
+      <div className="minus" onClick={() => props.keyEntered("-")}>
         -
       </div>
-      <div
-        className="button-blue right-panel plus"
-        onClick={() => props.keyEntered("+")}
-      >
+      <div className="plus" onClick={() => props.keyEntered("+")}>
         +
       </div>
       <div
-        className="button-blue right-panel equals"
-        onClick={() => props.keyEntered("=")}
+        className="equals button-blue right-panel"
+        onClick={() => props.keyEntered("equals")}
       >
         =
       </div>

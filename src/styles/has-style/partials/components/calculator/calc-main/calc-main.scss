@@ -1,23 +1,127 @@
-@import './pad/pad.scss';
-@import './main-end/main-end.scss';
-@import './main-start/main-start.scss';
-.main-box{
-    //positioning
-    position: absolute;
-    top:0;
-    bottom: 0;
-    left:0;
-    right:0;
-direction: rtl;
-display: grid;
- grid-template-areas: 'settings header header header i'
-'backspace  display display display theme'
-'divide c c c history'
-'multi 7 8 9 scientific'
-'minus 4 5 6 remote'
-'plus 1 2 3  space1'
-'equals decimal zero minusplus space2'
-'equals space3 space3 space3  space2';
-grid-template-columns: 1fr repeat(3, 1.5fr) 1fr;
-grid-template-rows: 0.5fr repeat(6, minmax(20px, 1fr)) 0.5fr;
+@import "./main-end/main-end.scss";
+@import "./main-start/main-start.scss";
+.main-box {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: grid;
+  grid-template-areas:
+    "a b b b c"
+    "d e e e f"
+    "g h h h i"
+    "j k l m n"
+    "o p q r s"
+    "t u v w x"
+    "y z aa ab ac"
+    "ad ae af ag ah";
+  grid-template-columns: 1fr repeat(3, 1.5fr) 1fr;
+  grid-template-rows: 0.5fr repeat(6, 1fr) 0.5fr;
+  background-color: var(--color-blue-1);
+
+  & div[grid-area="a"] {
+    grid-area: a;
+  }
+  & div[grid-area="b"] {
+    grid-area: b;
+  }
+  & div[grid-area="c"] {
+    grid-area: c;
+  }
+  & div[grid-area="d"] {
+    grid-area: d;
+  }
+  & div[grid-area="e"] {
+    grid-area: e;
+  }
+  & div[grid-area="f"] {
+    grid-area: f;
+  }
+  & div[grid-area="g"] {
+    grid-area: g;
+  }
+  & div[grid-area="h"] {
+    grid-area: h;
+  }
+
+  & div[grid-area="i"] {
+    grid-area: i;
+  }
+  & div[grid-area="j"] {
+    grid-area: j;
+  }
+  & div[grid-area="k"] {
+    grid-area: k;
+  }
+  & div[grid-area="l"] {
+    grid-area: l;
+  }
+  & div[grid-area="m"] {
+    grid-area: m;
+  }
+  & div[grid-area="n"] {
+    grid-area: n;
+  }
+  & div[grid-area="o"] {
+    grid-area: o;
+  }
+  & div[grid-area="p"] {
+    grid-area: p;
+  }
+  & div[grid-area="q"] {
+    grid-area: q;
+  }
+  & div[grid-area="r"] {
+    grid-area: r;
+  }
+  & div[grid-area="s"] {
+    grid-area: s;
+  }
+  & div[grid-area="t"] {
+    grid-area: t;
+  }
+  & div[grid-area="u"] {
+    grid-area: u;
+  }
+  & div[grid-area="v"] {
+    grid-area: v;
+  }
+  & div[grid-area="w"] {
+    grid-area: w;
+  }
+  & div[grid-area="x"] {
+    grid-area: x;
+  }
+  & div[grid-area="y"] {
+    grid-area: y;
+  }
+  & div[grid-area="z"] {
+    grid-area: z;
+  }
+  & div[grid-area="aa"] {
+    grid-area: aa;
+  }
+  & div[grid-area="ab"] {
+    grid-area: ab;
+  }
+  & div[grid-area="ac"] {
+    grid-area: ac;
+  }
+  & div[grid-area="ad"] {
+    grid-area: ad;
+  }
+  & div[grid-area="ae"] {
+    grid-area: ae;
+  }
+  & div[grid-area="af"] {
+    grid-area: af;
+  }
+  & div[grid-area="ag"] {
+    grid-area: ag;
+  }
+  & div[grid-area="ah"] {
+    grid-area: ah;
+  }
+
 }
