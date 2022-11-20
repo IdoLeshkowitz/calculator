@@ -14,6 +14,7 @@ export const ACTIONS = {
   CLEAR: "clear",
   DELETE_DIGIT: "delete-digit",
   EVALUATE: "evaluate",
+
 };
 
 function reducer(state, { type, payload }) {
@@ -100,8 +101,8 @@ function reducer(state, { type, payload }) {
         currentOperand: evaluate(state),
       };
   }
-}
 
+}
 function evaluate({ currentOperand, previousOperand, operation }) {
   const prev = parseFloat(previousOperand);
   const current = parseFloat(currentOperand);
@@ -201,6 +202,7 @@ function Calculator() {
         className={num.className}
         gridArea={num.gridArea}
         dispatch={dispatch}
+        key={num.digit}
       />
     ));
   };
@@ -239,6 +241,7 @@ function Calculator() {
         className={operator.className}
         gridArea={operator.gridArea}
         displayed={operator.displayed}
+        key={operator.operation}
       />
     ));
   };
@@ -269,6 +272,11 @@ function Calculator() {
         {/* clear button----> */}
         <div className="button-blue" grid-area='h' onClick={()=>dispatch({type:ACTIONS.CLEAR})}>C</div>
 
+        {/* ± button----> */}
+        <div className="button-white" grid-area='z' onClick={()=>dispatch({type:ACTIONS.MINUSPLUS})}></div>
+
+        {/* = button -----> */}
+    <div className="button-blue" grid-area='ac' onClick={()=>dispatch({type:ACTIONS.EVALUATE})}>=</div>
       </div>
     </div>
   );
