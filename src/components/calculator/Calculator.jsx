@@ -6,7 +6,7 @@ import { TbArrowBackUp, TbColumnInsertLeft } from "react-icons/tb";
 import { FcSettings } from "react-icons/fc";
 import { FiDivide } from "react-icons/fi";
 import { CgAsterisk } from "react-icons/cg";
-import {AiOutlinePlus} from 'react-icons/ai'
+import { AiOutlinePlus, AiOutlineVerticalAlignBottom } from "react-icons/ai";
 
 export const ACTIONS = {
   ADD_DIGIT: "add-digit",
@@ -14,11 +14,23 @@ export const ACTIONS = {
   CLEAR: "clear",
   DELETE_DIGIT: "delete-digit",
   EVALUATE: "evaluate",
-
+  MINUS_PLUS: "minus-plus",
 };
 
 function reducer(state, { type, payload }) {
   switch (type) {
+    case ACTIONS.MINUS_PLUS:
+      //if current operand is null continue else update it 
+      if (state.currentOperand){
+        return {
+          ...state,
+          currentOperand:(parseFloat(state.currentOperand)*-1).toString()
+        }
+      }
+      // if previous operand is null do nothing else update it
+    console.log(state.overwrite);
+      return state;
+
     case ACTIONS.ADD_DIGIT:
       if (state.overwrite) {
         return {
@@ -101,7 +113,6 @@ function reducer(state, { type, payload }) {
         currentOperand: evaluate(state),
       };
   }
-
 }
 function evaluate({ currentOperand, previousOperand, operation }) {
   const prev = parseFloat(previousOperand);
@@ -132,7 +143,8 @@ const INTEGER_FORMATTER = new Intl.NumberFormat("en-us", {
 
 function formatOperand(operand) {
   if (operand == null) return;
-  const [integer, decimal] = operand.split(".");
+  console.log(operand);
+  const [integer, decimal] = operand.toString().split(".");
   if (decimal == null) return INTEGER_FORMATTER.format(integer);
   return `${INTEGER_FORMATTER.format(integer)}.${decimal}`;
 }
@@ -144,6 +156,7 @@ function Calculator() {
   );
 
   const createDigits = () => {
+    //returns array of digitbutton components
     let nums = [
       {
         digit: 0,
@@ -207,31 +220,31 @@ function Calculator() {
     ));
   };
   const createOperators = () => {
+    //returns array of operator button components
     const operators = [
       {
         operation: "÷",
         className: "button-orange",
         gridArea: "i",
-        displayed:<FiDivide className="icon"/>
+        displayed: <FiDivide className="icon" />,
       },
       {
         operation: "-",
         className: "button-orange",
         gridArea: "s",
-        displayed:'-'
+        displayed: "-",
       },
       {
         operation: "*",
         className: "button-orange",
         gridArea: "n",
-        displayed:<CgAsterisk className="icon"/>
+        displayed: <CgAsterisk className="icon" />,
       },
       {
         operation: "+",
         className: "button-orange",
         gridArea: "x",
-        displayed:<AiOutlinePlus className="icon"/>
-
+        displayed: <AiOutlinePlus className="icon" />,
       },
     ];
     return operators.map((operator) => (
@@ -246,9 +259,7 @@ function Calculator() {
     ));
   };
 
-  const createFunctions =()=>{
-
-  }
+  const createFunctions = () => {};
   return (
     <div className="calc-box">
       <div className="main-box">
@@ -267,16 +278,42 @@ function Calculator() {
         {createOperators()}
 
         {/* backspace ---->*/}
-        <div className="button-blue" grid-area='f' onClick={()=>dispatch({type:ACTIONS.DELETE_DIGIT})}><TbArrowBackUp className="icon" /></div>
+        <div
+          className="button-blue"
+          grid-area="f"
+          onClick={() => dispatch({ type: ACTIONS.DELETE_DIGIT })}
+        >
+          <TbArrowBackUp className="icon" />
+        </div>
 
         {/* clear button----> */}
-        <div className="button-blue" grid-area='h' onClick={()=>dispatch({type:ACTIONS.CLEAR})}>C</div>
+        <div
+          className="button-blue"
+          grid-area="h"
+          onClick={() => dispatch({ type: ACTIONS.CLEAR })}
+        >
+          C
+        </div>
 
         {/* ± button----> */}
-        <div className="button-white" grid-area='z' onClick={()=>dispatch({type:ACTIONS.MINUSPLUS})}></div>
+        <div
+          className="button-white"
+          grid-area="z"
+          onClick={()=>dispatch({type:ACTIONS.MINUS_PLUS})}
+        >
+          ±
+        </div>
 
         {/* = button -----> */}
-    <div className="button-blue" grid-area='ac' onClick={()=>dispatch({type:ACTIONS.EVALUATE})}>=</div>
+        <div
+          className="button-blue"
+          grid-area="ac"
+          onClick={() =>
+            dispatch({ type: ACTIONS.EVALUATE, payload: { currentOperand } })
+          }
+        >
+          =
+        </div>
       </div>
     </div>
   );
