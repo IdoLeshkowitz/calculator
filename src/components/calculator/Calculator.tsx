@@ -1,13 +1,14 @@
-import React, { useEffect } from "react";
+import * as React from "react";
 import { useState, useReducer } from "react";
 import OperationButton from "./operationButton/OperationButton";
 import DigitButton from "./digitButton/DigitButton";
-import FunctionButton from "./FunctionButton/FunctionButton.tsx";
+import FunctionButton from "./FunctionButton/FunctionButton";
 import {
 	TbArrowBackUp,
 	TbColumnInsertLeft,
 	TbMathFunction,
-	TbMathFunctionOff
+	TbMathFunctionOff,
+	TbBulbOff,
 } from "react-icons/tb";
 import { FcSettings } from "react-icons/fc";
 import { FiDivide } from "react-icons/fi";
@@ -17,33 +18,74 @@ import {
 	AiOutlinePlus,
 	AiOutlineVerticalAlignBottom,
 } from "react-icons/ai";
+import { IconType } from "react-icons/lib";
+// state reducer actions interface
+export enum Actions {
+	ADD_DIGIT = "add-digit",
+	CHOOSE_OPERATION = "choose-operation",
+	CLEAR = "clear",
+	DELETE_DIGIT = "delete-digit",
+	EVALUATE = "evaluate",
+	MINUS_PLUS = "minus-plus",
+	LIGHT_MODE_TOGGLE = "light-mode-toggle",
+	SCIENTIFIC_MODE_TOGGLE = "scietific-mode-toggle",
+}
 
-export const ACTIONS = {
-	ADD_DIGIT: "add-digit",
-	CHOOSE_OPERATION: "choose-operation",
-	CLEAR: "clear",
-	DELETE_DIGIT: "delete-digit",
-	EVALUATE: "evaluate",
-	MINUS_PLUS: "minus-plus",
-	LIGHT_MODE_TOGGLE: "light-mode-toggle",
-	SCIENTIFIC_MODE_TOGGLE: "scietific-mode-toggle",
+//Calcstate interface definement
+interface CalcState {
+	currentOperand: string | null;
+	previousOperand: string | null;
+	operation: "+" | "-" | "*" | "/" | null;
+	lightMode: "dark" | "light";
+	scientific: boolean;
+	overwrite: boolean;
+}
+
+//initial calc state
+const initialState: CalcState = {
+	currentOperand: null,
+	previousOperand: null,
+	operation: null,
+	lightMode: "light",
+	scientific: false,
+	overwrite: false,
 };
 
-function reducer(state, { type, payload }) {
-	switch (type) {
-		case ACTIONS.SCIENTIFIC_MODE_TOGGLE:
+// reducer action type definement
+type CalcAction =
+	| {
+			type: Actions.ADD_DIGIT | Actions.CHOOSE_OPERATION;
+			payload: string;
+	  }
+	| {
+			type:
+				| Actions.CLEAR
+				| Actions.DELETE_DIGIT
+				| Actions.EVALUATE
+				| Actions.LIGHT_MODE_TOGGLE
+				| Actions.MINUS_PLUS
+				| Actions.SCIENTIFIC_MODE_TOGGLE;
+	  };
+
+function reducer(
+	state: CalcState,
+	action: CalcAction
+): any {
+	switch (action.type) {
+		case Actions.SCIENTIFIC_MODE_TOGGLE:
+			console.log('ddd');
 			if (!state.scientific) {
 				return {
-					...state,
+					lightMode: state.lightMode,
 					scientific: true,
 				};
 			}
-				return {
-					...state,
-					scientific: false,
-				};
-			
-		case ACTIONS.LIGHT_MODE_TOGGLE:
+			return {
+				lightMode: state.lightMode,
+				scientific: false,
+			};
+
+		case Actions.LIGHT_MODE_TOGGLE:
 			let modes = ["dark", "light"];
 			// if current light mode state is empty set it to dark
 			if (!state.lightMode) {
@@ -58,7 +100,7 @@ function reducer(state, { type, payload }) {
 					modes[1 - modes.indexOf(state.lightMode)],
 			};
 
-		case ACTIONS.MINUS_PLUS:
+		case Actions.MINUS_PLUS:
 			//if current operand is null continue else update it
 			if (state.currentOperand) {
 				return {
@@ -79,17 +121,17 @@ function reducer(state, { type, payload }) {
 			}
 			//else do nothing
 			return state;
-		case ACTIONS.ADD_DIGIT:
+		case Actions.ADD_DIGIT:
 			if (state.overwrite) {
 				return {
 					...state,
 					currentOperand:
-						state.currentOperand + payload.digit,
+						state.currentOperand + action.payload,
 					overwrite: false,
 				};
 			}
 			if (
-				payload.digit === "0" &&
+				action.payload === "0" &&
 				state.currentOperand === "0"
 			) {
 				return state;
@@ -97,7 +139,7 @@ function reducer(state, { type, payload }) {
 
 			// if digit is decimal point
 			if (
-				payload.digit === "." &&
+				action.payload === "." &&
 				state.currentOperand &&
 				state.currentOperand.includes(".")
 			) {
@@ -107,10 +149,10 @@ function reducer(state, { type, payload }) {
 			return {
 				...state,
 				currentOperand: `${state.currentOperand || ""}${
-					payload.digit
+					action.payload
 				}`,
 			};
-		case ACTIONS.CHOOSE_OPERATION:
+		case Actions.CHOOSE_OPERATION:
 			if (
 				state.currentOperand == null &&
 				state.previousOperand == null
@@ -121,23 +163,15 @@ function reducer(state, { type, payload }) {
 			if (state.currentOperand == null) {
 				return {
 					...state,
-					operation: payload.operation,
+					operation: action.payload,
 				};
 			}
 
 			if (state.previousOperand == null) {
 				return {
 					...state,
-					operation: payload.operation,
+					operation: action.payload,
 					previousOperand: state.currentOperand,
-					currentOperand: null,
-				};
-			}
-			if (!state.scientific) {
-				return {
-					...state,
-					previousOperand: evaluate(state),
-					operation: payload.operation,
 					currentOperand: null,
 				};
 			}
@@ -147,15 +181,15 @@ function reducer(state, { type, payload }) {
 					state.previousOperand +
 					state.operation +
 					state.currentOperand,
-				operation: payload.operation,
+				operation: action.payload,
 				currentOperand: null,
 			};
-		case ACTIONS.CLEAR:
+		case Actions.CLEAR:
 			return {
-				scientific:state.scientific,
-				lightMode:state.lightMode
+				scientific: state.scientific,
+				lightMode: state.lightMode,
 			};
-		case ACTIONS.DELETE_DIGIT:
+		case Actions.DELETE_DIGIT:
 			if (state.overwrite) {
 				return {
 					...state,
@@ -172,7 +206,7 @@ function reducer(state, { type, payload }) {
 				...state,
 				currentOperand: state.currentOperand.slice(0, -1),
 			};
-		case ACTIONS.EVALUATE:
+		case Actions.EVALUATE:
 			if (
 				state.operation == null ||
 				state.currentOperand == null ||
@@ -186,47 +220,20 @@ function reducer(state, { type, payload }) {
 				overwrite: true,
 				previousOperand: null,
 				operation: null,
-				currentOperand: evaluate(state),
+				currentOperand: eval(
+					state.previousOperand +
+						state.operation +
+						state.currentOperand
+				),
 			};
 	}
-}
-function evaluate({
-	currentOperand,
-	previousOperand,
-	operation,
-	scientific,
-}) {
-	let computation = "";
-	if (!scientific) {
-		const prev = parseFloat(previousOperand);
-		const current = parseFloat(currentOperand);
-		if (isNaN(prev) || isNaN(current)) return "";
-		switch (operation) {
-			case "+":
-				computation = prev + current;
-				break;
-			case "-":
-				computation = prev - current;
-				break;
-			case "*":
-				computation = prev * current;
-				break;
-			case "÷":
-				computation = prev / current;
-				break;
-		}
-	
-	} else {
-		computation=eval(previousOperand + operation + currentOperand)
-	}
-	return computation.toString();
 }
 
 const INTEGER_FORMATTER = new Intl.NumberFormat("en-us", {
 	maximumFractionDigits: 2,
 });
 
-function formatCurrOperand(operand) {
+function formatCurrOperand(operand: string) {
 	return operand;
 	// if (operand == null) return;
 	// const [integer, decimal] = operand.toString().split(".");
@@ -234,7 +241,7 @@ function formatCurrOperand(operand) {
 	// return `${INTEGER_FORMATTER.format(integer)}.${decimal}`;
 }
 
-function formatPreviousOperand(operand) {
+function formatPreviousOperand(operand: string) {
 	return eval(operand);
 	// if (operand == null) return;
 	// const [integer, decimal] = operand.toString().split(".");
@@ -251,10 +258,15 @@ function Calculator() {
 			scientific,
 		},
 		dispatch,
-	] = useReducer(reducer, {});
+	] = useReducer(reducer, initialState);
 	const createDigits = () => {
 		//returns array of digitbutton components
-		let nums = [
+		interface DigitButton {
+			digit: number | ".";
+			gridArea: string;
+			className: string;
+		}
+		let nums: DigitButton[] = [
 			{
 				digit: 0,
 				gridArea: "aa",
@@ -323,9 +335,16 @@ function Calculator() {
 	};
 	const createOperators = () => {
 		//returns array of operator button components
-		const operators = [
+		interface OperatorButton {
+			operation: string;
+			className: string;
+			gridArea: string;
+			displayed: JSX.Element | string;
+			zone: string;
+		}
+		const operators: OperatorButton[] = [
 			{
-				operation: "÷",
+				operation: "/",
 				className: "button-orange",
 				gridArea: "i",
 				displayed: <FiDivide className="icon" />,
@@ -364,38 +383,70 @@ function Calculator() {
 			/>
 		));
 	};
-	const getButtonsClasses = (button) => {
-		let classes = {
-			display: () => {
-				let classes = "button display-box";
+	type buttons = "display";
+	const getButtonsClasses = (button: buttons) => {
+		interface StyleClasses {
+			display: Function;
+		}
+		let styleClasses: StyleClasses = {
+			display: (): string => {
+				let styleClasses = "button display-box";
 				// if mode is not defined set as light mode
-				if (!lightMode) return classes + " light";
-				if (lightMode === "dark") return classes + " dark";
-				return classes + " light";
+				if (!lightMode) return styleClasses + " light";
+				if (lightMode === "dark")
+					return styleClasses + " dark";
+				return styleClasses + " light";
 			},
 		};
-		return classes[button]();
+		return styleClasses[button]();
 	};
+
+	// returns array of function button components
 	const createFunctions = () => {
-		let functions = [
+		interface FunctionButton {
+			key: string;
+			zone: string;
+			func: Function;
+			gridArea: string;
+			className: string;
+			displayed: JSX.Element;
+		}
+		let functions: FunctionButton[] = [
 			{
-				value: "scientific",
+				key: "scientific",
 				gridArea: "j",
-				className:'button-orange',
-				displayed: scientific ? <TbMathFunction className="icon" /> :<TbMathFunctionOff className="icon"/> ,
+				className: "button-orange",
+				displayed: scientific ? (
+					<TbMathFunction className="icon" />
+				) : (
+					<TbMathFunctionOff className="icon" />
+				),
 				zone: "main",
-				func: () => {
-					dispatch({
-						type: ACTIONS.SCIENTIFIC_MODE_TOGGLE,
-					});
-				},
+				func:()=> dispatch({
+					type: Actions.SCIENTIFIC_MODE_TOGGLE,
+				}),
+			},
+			{
+				key: "lightMode",
+				gridArea: "d",
+				displayed:
+					lightMode === "dark" ? (
+						<HiOutlineLightBulb className="icon" />
+					) : (
+						<TbBulbOff className="icon" />
+					),
+				className: "button-orange",
+				zone: "main",
+				func:()=> dispatch({
+					type: Actions.LIGHT_MODE_TOGGLE,
+				}),
 			},
 		];
 		return functions.map((func) => {
 			return (
 				<FunctionButton
-				className={func.className}
-					dispatch={dispatch}
+					key={func.key}
+					className={func.className}
 					func={func.func}
 					gridArea={func.gridArea}
 					displayed={func.displayed}
@@ -403,11 +454,11 @@ function Calculator() {
 			);
 		});
 	};
+	////////////////////////render ----->
 	return (
 		<div className="calc-box">
 			<div className="main-box">
-				{/* disp
-        lay----> */}
+				{/* display----> */}
 				<div
 					className={getButtonsClasses("display")}
 					grid-area="e">
@@ -431,26 +482,22 @@ function Calculator() {
 					className="button-blue"
 					grid-area="f"
 					onClick={() =>
-						dispatch({ type: ACTIONS.DELETE_DIGIT })
+						dispatch({
+							type: Actions.DELETE_DIGIT,
+						})
 					}>
 					<TbArrowBackUp className="icon" />
-				</div>
-
-				{/* light mode button */}
-				<div
-					className="button-orange"
-					grid-area="d"
-					onClick={() =>
-						dispatch({ type: ACTIONS.LIGHT_MODE_TOGGLE })
-					}>
-					<HiOutlineLightBulb className="icon" />
 				</div>
 
 				{/* clear button----> */}
 				<div
 					className="button-blue"
 					grid-area="h"
-					onClick={() => dispatch({ type: ACTIONS.CLEAR })}>
+					onClick={() =>
+						dispatch({
+							type: Actions.CLEAR,
+						})
+					}>
 					C
 				</div>
 
@@ -459,7 +506,9 @@ function Calculator() {
 					className="button-white"
 					grid-area="z"
 					onClick={() =>
-						dispatch({ type: ACTIONS.MINUS_PLUS })
+						dispatch({
+							type: Actions.MINUS_PLUS,
+						})
 					}>
 					±
 				</div>
@@ -470,8 +519,7 @@ function Calculator() {
 					grid-area="ac"
 					onClick={() =>
 						dispatch({
-							type: ACTIONS.EVALUATE,
-							payload: { currentOperand },
+							type: Actions.EVALUATE,
 						})
 					}>
 					=

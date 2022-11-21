@@ -1,18 +1,18 @@
 import * as React from "react";
-import { ACTIONS } from "../Calculator";
-const FunctionButton = ({
-	dispatch,
-	func,
-	gridArea,
-	className,
-	displayed,
-}): JSX.Element => {
+import { IconType } from "react-icons/lib";
+interface Props{
+	func :Function ;
+	gridArea:string;
+	className : string ;
+	displayed : JSX.Element ;
+}
+const FunctionButton = (props:Props): JSX.Element => {
 	return (
 		<div
-			grid-area={gridArea}
-			className={className}
-			onClick={func}>
-			{displayed}
+			grid-area={props.gridArea}
+			className={props.className}
+			onClick={()=>props.func()}>
+			{props.displayed}
 		</div>
 	);
 };
