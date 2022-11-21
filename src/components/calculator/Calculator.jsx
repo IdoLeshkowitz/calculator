@@ -36,7 +36,6 @@ function reducer(state, { type, payload }) {
       }
       
     case ACTIONS.MINUS_PLUS:
-      console.log(state.previousOperand);
       //if current operand is null continue else update it
       if (state.currentOperand) {
         return {
@@ -46,7 +45,6 @@ function reducer(state, { type, payload }) {
       }
       // if previous operand is null  update it
       if (state.previousOperand) {
-        console.log('now');
         return {
           ...state,
           previousOperand: (parseFloat(state.previousOperand) * -1).toString(),
