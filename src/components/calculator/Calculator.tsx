@@ -139,7 +139,7 @@ function reducer(
 			// if digit is decimal point
 			if (
 				action.payload === "." &&
-				state.currentOperand &&
+				state.currentOperand && 
 				state.currentOperand.includes(".")
 			) {
 				//if current operand conatins decimal or its none do nothing
