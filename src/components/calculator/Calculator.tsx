@@ -128,20 +128,12 @@ function reducer(
 			//else do nothing
 			return state;
 		case Actions.ADD_DIGIT:
-			console.log(state);
-			if (state.overwrite) {
+			//if current operand is 0 override it
+			if (state.currentOperand === "0") {
 				return {
 					...state,
-					currentOperand:
-						state.currentOperand + action.payload,
-					overwrite: false,
+					currentOperand: action.payload,
 				};
-			}
-			if (
-				action.payload === "0" &&
-				state.currentOperand === "0"
-			) {
-				return state;
 			}
 
 			// if digit is decimal point
@@ -153,12 +145,14 @@ function reducer(
 				//if current operand conatins decimal or its none do nothing
 				return state;
 			}
+			console.log('ddd');
 			return {
 				...state,
 				currentOperand: `${state.currentOperand || ""}${
 					action.payload
 				}`,
 			};
+
 		case Actions.CHOOSE_OPERATION:
 			//if both operands are empty do nothing
 			if (
@@ -267,15 +261,19 @@ function formatCurrOperand(operand: string) {
 	// return `${INTEGER_FORMATTER.format(integer)}.${decimal}`;
 }
 
-function formatPreviousOperand(
+function formatOperand(
 	operand: string,
 	isScientific: boolean
 ) {
+	let output='';
 	if (!isScientific) {
-		return operand;
+		output= operand;
 	} else {
-		return eval(operand) || "";
+		output= eval(operand) || "";
 	}
+	output=output.toString();
+	return output.startsWith('Infinity') ? 'zero division':output;
+	//return output === 'infinity' ?  'cannot devide by zero' : output;
 	//return eval(operand);
 	// if (operand == null) return;
 	// const [integer, decimal] = operand.toString().split(".");
@@ -296,58 +294,58 @@ function Calculator(): JSX.Element {
 	const createDigits = () => {
 		//returns array of digitbutton components
 		interface DigitButton {
-			digit: number | ".";
+			digit: string;
 			gridArea: string;
 			className: string;
 		}
 		let nums: DigitButton[] = [
 			{
-				digit: 0,
+				digit: "0",
 				gridArea: "aa",
 				className: "button-white",
 			},
 			{
-				digit: 1,
+				digit: "1",
 				gridArea: "u",
 				className: "button-white",
 			},
 			{
-				digit: 2,
+				digit: "2",
 				gridArea: "v",
 				className: "button-white",
 			},
 			{
-				digit: 3,
+				digit: "3",
 				gridArea: "w",
 				className: "button-white",
 			},
 			{
-				digit: 4,
+				digit: "4",
 				gridArea: "p",
 				className: "button-white",
 			},
 			{
-				digit: 5,
+				digit: "5",
 				gridArea: "q",
 				className: "button-white",
 			},
 			{
-				digit: 6,
+				digit: "6",
 				gridArea: "r",
 				className: "button-white",
 			},
 			{
-				digit: 7,
+				digit: "7",
 				gridArea: "k",
 				className: "button-white",
 			},
 			{
-				digit: 8,
+				digit: "8",
 				gridArea: "l",
 				className: "button-white",
 			},
 			{
-				digit: 9,
+				digit: "9",
 				gridArea: "m",
 				className: "button-white",
 			},
@@ -501,13 +499,13 @@ function Calculator(): JSX.Element {
 					className={getButtonsClasses("display")}
 					grid-area="e">
 					<div className="previous-operand">
-						{formatPreviousOperand(
+						{formatOperand(
 							previousOperand,
 							scientific
 						) + operation}
 					</div>
 					<div className="current-operand">
-						{currentOperand}
+						{formatOperand( currentOperand, scientific)}
 					</div>
 				</div>
 
