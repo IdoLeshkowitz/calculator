@@ -4,7 +4,7 @@ import { Actions } from "../Calculator";
 
 interface Props {
 	dispatch: Function;
-	digit: number | ".";
+	digit: string | ".";
 	gridArea: string;
 	className: string;
 }
