@@ -128,6 +128,7 @@ function reducer(
 			//else do nothing
 			return state;
 		case Actions.ADD_DIGIT:
+			console.log(state);
 			if (state.overwrite) {
 				return {
 					...state,
@@ -159,7 +160,6 @@ function reducer(
 				}`,
 			};
 		case Actions.CHOOSE_OPERATION:
-			console.log(state);
 			//if both operands are empty do nothing
 			if (
 				state.currentOperand == "" &&
@@ -201,9 +201,12 @@ function reducer(
 				//if scientific mode is on append operation to previous operand
 				return {
 					...state,
-					previousOperand:state.previousOperand + state.operation + state.currentOperand,
+					previousOperand:
+						state.previousOperand +
+						state.operation +
+						state.currentOperand,
 					currentOperand: "",
-					operation:action.payload,
+					operation: action.payload,
 				};
 			}
 
@@ -271,7 +274,7 @@ function formatPreviousOperand(
 	if (!isScientific) {
 		return operand;
 	} else {
-	return eval(operand) || '';
+		return eval(operand) || "";
 	}
 	//return eval(operand);
 	// if (operand == null) return;
@@ -498,7 +501,10 @@ function Calculator(): JSX.Element {
 					className={getButtonsClasses("display")}
 					grid-area="e">
 					<div className="previous-operand">
-						{formatPreviousOperand(previousOperand,scientific)+operation}
+						{formatPreviousOperand(
+							previousOperand,
+							scientific
+						) + operation}
 					</div>
 					<div className="current-operand">
 						{currentOperand}
