@@ -32,10 +32,10 @@ export enum Actions {
 }
 
 //Calcstate interface definement
-interface CalcState {
-	currentOperand: string | null;
-	previousOperand: string | null;
-	operation: "+" | "-" | "*" | "/" | null;
+abstract class CalcState {
+	currentOperand: string;
+	previousOperand: string;
+	operation: string;
 	lightMode: "dark" | "light";
 	scientific: boolean;
 	overwrite: boolean;
@@ -43,50 +43,56 @@ interface CalcState {
 
 //initial calc state
 const initialState: CalcState = {
-	currentOperand: null,
-	previousOperand: null,
-	operation: null,
+	currentOperand: "",
+	previousOperand: "",
+	operation: "",
 	lightMode: "light",
 	scientific: false,
 	overwrite: false,
 };
-
+type payload =
+	| CalcState["operation"]
+	| CalcState["currentOperand"]
+	| "";
 // reducer action type definement
-type CalcAction =
-	| {
-			type: Actions.ADD_DIGIT | Actions.CHOOSE_OPERATION;
-			payload: string;
-	  }
-	| {
-			type:
-				| Actions.CLEAR
-				| Actions.DELETE_DIGIT
-				| Actions.EVALUATE
-				| Actions.LIGHT_MODE_TOGGLE
-				| Actions.MINUS_PLUS
-				| Actions.SCIENTIFIC_MODE_TOGGLE;
-	  };
+interface CalcAction {
+	payload: payload;
+	type:
+		| Actions.CLEAR
+		| Actions.DELETE_DIGIT
+		| Actions.EVALUATE
+		| Actions.LIGHT_MODE_TOGGLE
+		| Actions.MINUS_PLUS
+		| Actions.SCIENTIFIC_MODE_TOGGLE
+		| Actions.ADD_DIGIT
+		| Actions.CHOOSE_OPERATION;
+}
 
+//reducer function ----->
 function reducer(
 	state: CalcState,
 	action: CalcAction
-): any {
+): CalcState {
 	switch (action.type) {
 		case Actions.SCIENTIFIC_MODE_TOGGLE:
-			console.log('ddd');
 			if (!state.scientific) {
 				return {
+					...state,
 					lightMode: state.lightMode,
 					scientific: true,
 				};
 			}
 			return {
+				...state,
 				lightMode: state.lightMode,
 				scientific: false,
 			};
 
 		case Actions.LIGHT_MODE_TOGGLE:
-			let modes = ["dark", "light"];
+			let modes: CalcState["lightMode"][] = [
+				"dark",
+				"light",
+			];
 			// if current light mode state is empty set it to dark
 			if (!state.lightMode) {
 				return {
@@ -153,39 +159,57 @@ function reducer(
 				}`,
 			};
 		case Actions.CHOOSE_OPERATION:
+			console.log(state);
+			//if both operands are empty do nothing
 			if (
-				state.currentOperand == null &&
-				state.previousOperand == null
+				state.currentOperand == "" &&
+				state.previousOperand == ""
 			) {
 				return state;
 			}
 
-			if (state.currentOperand == null) {
+			//if only current operand is empty update operation to new value
+			if (state.currentOperand == "") {
 				return {
 					...state,
 					operation: action.payload,
 				};
 			}
 
-			if (state.previousOperand == null) {
+			// if (state.previousOperand == '') {
+			// 	return {
+			// 		...state,
+			// 		operation: action.payload,
+			// 		previousOperand: state.currentOperand,
+			// 		currentOperand: "",
+			// 	};
+			// }
+
+			if (!state.scientific) {
+				//if scietific mode is off override the previous operand
 				return {
 					...state,
+					previousOperand: eval(
+						state.previousOperand +
+							state.operation +
+							state.currentOperand
+					),
 					operation: action.payload,
-					previousOperand: state.currentOperand,
-					currentOperand: null,
+					currentOperand: "",
+				};
+			} else {
+				//if scientific mode is on append operation to previous operand
+				return {
+					...state,
+					previousOperand:state.previousOperand + state.operation + state.currentOperand,
+					currentOperand: "",
+					operation:action.payload,
 				};
 			}
-			return {
-				...state,
-				previousOperand:
-					state.previousOperand +
-					state.operation +
-					state.currentOperand,
-				operation: action.payload,
-				currentOperand: null,
-			};
+
 		case Actions.CLEAR:
 			return {
+				...initialState,
 				scientific: state.scientific,
 				lightMode: state.lightMode,
 			};
@@ -194,12 +218,12 @@ function reducer(
 				return {
 					...state,
 					overwrite: false,
-					currentOperand: null,
+					currentOperand: "",
 				};
 			}
-			if (state.currentOperand == null) return state;
+			if (state.currentOperand == "") return state;
 			if (state.currentOperand.length === 1) {
-				return { ...state, currentOperand: null };
+				return { ...state, currentOperand: "" };
 			}
 
 			return {
@@ -208,9 +232,9 @@ function reducer(
 			};
 		case Actions.EVALUATE:
 			if (
-				state.operation == null ||
-				state.currentOperand == null ||
-				state.previousOperand == null
+				state.operation == "" ||
+				state.currentOperand == "" ||
+				state.previousOperand == ""
 			) {
 				return state;
 			}
@@ -218,8 +242,8 @@ function reducer(
 			return {
 				...state,
 				overwrite: true,
-				previousOperand: null,
-				operation: null,
+				previousOperand: "",
+				operation: "",
 				currentOperand: eval(
 					state.previousOperand +
 						state.operation +
@@ -234,21 +258,28 @@ const INTEGER_FORMATTER = new Intl.NumberFormat("en-us", {
 });
 
 function formatCurrOperand(operand: string) {
-	return operand;
 	// if (operand == null) return;
 	// const [integer, decimal] = operand.toString().split(".");
 	// if (decimal == null) return INTEGER_FORMATTER.format(integer);
 	// return `${INTEGER_FORMATTER.format(integer)}.${decimal}`;
 }
 
-function formatPreviousOperand(operand: string) {
-	return eval(operand);
+function formatPreviousOperand(
+	operand: string,
+	isScientific: boolean
+) {
+	if (!isScientific) {
+		return operand;
+	} else {
+	return eval(operand) || '';
+	}
+	//return eval(operand);
 	// if (operand == null) return;
 	// const [integer, decimal] = operand.toString().split(".");
 	// if (decimal == null) return INTEGER_FORMATTER.format(integer);
 	// return `${INTEGER_FORMATTER.format(integer)}.${decimal}`;
 }
-function Calculator() {
+function Calculator(): JSX.Element {
 	const [
 		{
 			currentOperand,
@@ -336,7 +367,7 @@ function Calculator() {
 	const createOperators = () => {
 		//returns array of operator button components
 		interface OperatorButton {
-			operation: string;
+			operation: "+" | "-" | "*" | "/";
 			className: string;
 			gridArea: string;
 			displayed: JSX.Element | string;
@@ -422,9 +453,11 @@ function Calculator() {
 					<TbMathFunctionOff className="icon" />
 				),
 				zone: "main",
-				func:()=> dispatch({
-					type: Actions.SCIENTIFIC_MODE_TOGGLE,
-				}),
+				func: () =>
+					dispatch({
+						type: Actions.SCIENTIFIC_MODE_TOGGLE,
+						payload: "",
+					}),
 			},
 			{
 				key: "lightMode",
@@ -437,9 +470,11 @@ function Calculator() {
 					),
 				className: "button-orange",
 				zone: "main",
-				func:()=> dispatch({
-					type: Actions.LIGHT_MODE_TOGGLE,
-				}),
+				func: () =>
+					dispatch({
+						type: Actions.LIGHT_MODE_TOGGLE,
+						payload: "",
+					}),
 			},
 		];
 		return functions.map((func) => {
@@ -463,11 +498,10 @@ function Calculator() {
 					className={getButtonsClasses("display")}
 					grid-area="e">
 					<div className="previous-operand">
-						{formatPreviousOperand(previousOperand)}{" "}
-						{operation}
+						{formatPreviousOperand(previousOperand,scientific)+operation}
 					</div>
 					<div className="current-operand">
-						{formatCurrOperand(currentOperand)}
+						{currentOperand}
 					</div>
 				</div>
 
@@ -484,6 +518,7 @@ function Calculator() {
 					onClick={() =>
 						dispatch({
 							type: Actions.DELETE_DIGIT,
+							payload: "",
 						})
 					}>
 					<TbArrowBackUp className="icon" />
@@ -496,6 +531,7 @@ function Calculator() {
 					onClick={() =>
 						dispatch({
 							type: Actions.CLEAR,
+							payload: "",
 						})
 					}>
 					C
@@ -508,6 +544,7 @@ function Calculator() {
 					onClick={() =>
 						dispatch({
 							type: Actions.MINUS_PLUS,
+							payload: "",
 						})
 					}>
 					±
@@ -520,6 +557,7 @@ function Calculator() {
 					onClick={() =>
 						dispatch({
 							type: Actions.EVALUATE,
+							payload: "",
 						})
 					}>
 					=
