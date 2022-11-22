@@ -250,9 +250,7 @@ function reducer(
 	}
 }
 
-const INTEGER_FORMATTER = new Intl.NumberFormat("en-us", {
-	maximumFractionDigits: 2,
-});
+
 
 function formatCurrOperand(operand: string) {
 	// if (operand == null) return;
@@ -288,6 +286,7 @@ function Calculator(): JSX.Element {
 			operation,
 			lightMode,
 			scientific,
+
 		},
 		dispatch,
 	] = useReducer(reducer, initialState);
