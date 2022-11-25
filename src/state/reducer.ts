@@ -1,4 +1,4 @@
-import { stat } from "fs";
+import { stat, unwatchFile } from "fs";
 import { AiOutlinePicture } from "react-icons/ai";
 import { Action, ActionType } from "./index";
 
@@ -37,9 +37,11 @@ export abstract class CalcState {
 	};
 	history: Array<string>;
 }
-const evaluate = (state: CalcState): Number => {
-	console.log(state);
+export const evaluate = (
+	state: CalcState
+): Number=> {
 	let output: Number = 0;
+	if (state.overwrite) return state.previousOperand.value;
 	if (!state.scientific) {
 		// if !scietific calc using previous  operand value
 		output = eval(
@@ -105,11 +107,7 @@ export const reducer = (
 					...state,
 					previousOperand: {
 						expression: `(${state.previousOperand.expression})*-1`,
-						value: evaluate({
-							...state,
-							operation: "*",
-							currentOperand: "-1",
-						}),
+						value: eval (`${state.previousOperand.value}*-1`)
 					},
 				};
 			} else {
@@ -130,7 +128,7 @@ export const reducer = (
 				},
 				operation: undefined,
 				overwrite: true,
-				history: ['']
+				history: [""],
 			};
 		case ActionType.LIGHT_MODE_TOGGLE:
 			return {

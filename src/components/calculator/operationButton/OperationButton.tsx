@@ -7,7 +7,7 @@ interface OprationProps{
   className : string ;
   displayed : JSX.Element| string ;
 }
-function OperationButton(props:OprationProps): JSX.Element {
+function OperationButton(props:OprationProps) {
   return (
     <div
       className={props.className}

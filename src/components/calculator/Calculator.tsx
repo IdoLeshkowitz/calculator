@@ -4,6 +4,7 @@ import {
 	ActionType,
 	CalcState,
 	reducer,
+	evaluate,
 } from "./../../state/index";
 import { useState, useReducer } from "react";
 import OperationButton from "./operationButton/OperationButton";
@@ -303,10 +304,25 @@ const Calculator: React.FC = () => {
 					<div
 						className={getButtonsClasses("display")}
 						grid-area="e">
-						<div className="previous-operand">
-							{previousOperand.expression}
-							{operation}
-							{overwrite ?'' : currentOperand}
+						<div className="display-expression">
+							{previousOperand?.expression}
+							{operation || ""}
+							{overwrite ? '' :  currentOperand}
+						</div>
+						<div className="display-eval">
+							={evaluate({
+								previousOperand,
+								lightMode,
+								scientific,
+								currentOperand,
+								operation,
+								overwrite,
+								historyMode,
+								configMode,
+								styles,
+								history,
+							})?.toString() ||
+								previousOperand.value.toString()}
 						</div>
 					</div>
 
