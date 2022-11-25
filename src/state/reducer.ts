@@ -15,8 +15,8 @@ export type Digit =
 	| "9"
 	| "0"
 	| ".";
-export type Font = |'Arial'|'Roboto';
-export type BgColor = |'blue'|'white';
+export type Font = "Arial" | "Roboto";
+export type BgColor = "blue" | "white";
 //Calcstate interface definement
 export abstract class CalcState {
 	currentOperand: string | undefined; //last entered number or 0
@@ -31,10 +31,11 @@ export abstract class CalcState {
 	overwrite: boolean;
 	historyMode: boolean;
 	configMode: boolean;
-    styles : {
-        font : string ;
-        bgColor:string; 
-    }
+	styles: {
+		font: string;
+		bgColor: string;
+	};
+	history: Array<string>;
 }
 const evaluate = (state: CalcState): Number => {
 	console.log(state);
@@ -67,22 +68,22 @@ export const reducer = (
 	action: Action
 ): CalcState => {
 	switch (action.type) {
-        case ActionType.SET_BGCOLOR:
-            return {
-                ...state ,
-                styles:{
-                    ...state.styles,
-                    bgColor : action.payload
-                }
-            }
-        case ActionType.SET_FONT:
-            return {
-                ...state, 
-                styles:{
-                    ...state.styles ,
-                    font: action.payload
-                }
-            }
+		case ActionType.SET_BGCOLOR:
+			return {
+				...state,
+				styles: {
+					...state.styles,
+					bgColor: action.payload,
+				},
+			};
+		case ActionType.SET_FONT:
+			return {
+				...state,
+				styles: {
+					...state.styles,
+					font: action.payload,
+				},
+			};
 		case ActionType.CONFIG_MODE_TOGGLE:
 			return {
 				...state,
@@ -129,6 +130,7 @@ export const reducer = (
 				},
 				operation: undefined,
 				overwrite: true,
+				history: ['']
 			};
 		case ActionType.LIGHT_MODE_TOGGLE:
 			return {
@@ -153,6 +155,22 @@ export const reducer = (
 				};
 			}
 			let evaluatedExpression = evaluate(state);
+			if (!state.previousOperand.expression) {
+				return {
+					...state,
+					previousOperand: {
+						expression: `${
+							state.previousOperand?.expression || ""
+						}${state.operation || ""}${
+							state.currentOperand
+						}`,
+						value: evaluatedExpression,
+					},
+					operation: action.payload,
+					currentOperand: evaluatedExpression.toString(),
+					overwrite: true,
+				};
+			}
 			return {
 				...state,
 				previousOperand: {
@@ -164,6 +182,11 @@ export const reducer = (
 				operation: action.payload,
 				currentOperand: evaluatedExpression.toString(),
 				overwrite: true,
+				history: state.history.concat([
+					`${state.previousOperand?.expression || ""}${
+						state.operation || ""
+					}${state.currentOperand}=${evaluatedExpression}`,
+				]),
 			};
 		case ActionType.EVALUATE:
 			//if (state.overwrite) return state;
@@ -177,6 +200,11 @@ export const reducer = (
 					value: evaluated,
 				},
 				overwrite: true,
+				history: state.history.concat([
+					`${state.previousOperand?.expression || ""}${
+						state.operation || ""
+					}${state.currentOperand}=${evaluated}`,
+				]),
 			};
 		case ActionType.ADD_DIGIT:
 			// double zero preventing

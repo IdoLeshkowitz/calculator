@@ -29,7 +29,7 @@ function ConfigForm(props:Props): JSX.Element {
                     <option value="blue">blue</option>
                     <option value="orange">orange</option>
                 </select>
-                <button className="form-button"></button>
+                <button className="form-button">apply</button>
 			</form>
 		</div>
 	);

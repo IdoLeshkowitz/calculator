@@ -6,40 +6,50 @@
 //history
 
 .calc-box {
-  position: relative;
-  display: flex;
-  @media (max-width:600px){
-    flex-direction: column;
-}
-@media (min-width:601px){
-    flex-direction: row;
-}
+	position: relative;
+	display: flex;
+	@media (max-width: 600px) {
+		flex-direction: column;
+	}
+	@media (min-width: 601px) {
+		flex-direction: row;
+	}
 
-  & div {
-    margin: 0;
-    border: none;
-   //cell display settings
-    & div {
-         
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    }
+	& .history-box {
+		background-color: var(--color-white-1);
+    width:100px;
+	word-break: break-all;
+	display: flex;
+	flex-direction: column;
+	row-gap: 1rem;
+	align-items: flex-start;
+	}
+	& div {
+		margin: 0;
+		border: none;
+		//cell display settings
+		& div {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+	}
 
-  }
-
-
-  & [class*="blue"] {
-    background: linear-gradient(0.25turn, var(--color-blue-1) , var(--color-blue-2));
-    //background-color: var(--color-blue-1);
-  }
-  & [class*="yellow"] {
-    background-color: var(--color-yellow-1);
-  }
-  & [class*="white"] {
-    background-color: var(--color-white-1);
-  }
-  & [class*="orange"] {
-    background-color: var(--color-orange-1);
-  }
+	& [class*="blue"] {
+		background: linear-gradient(
+			0.25turn,
+			var(--color-blue-1),
+			var(--color-blue-2)
+		);
+		//background-color: var(--color-blue-1);
+	}
+	& [class*="yellow"] {
+		background-color: var(--color-yellow-1);
+	}
+	& [class*="white"] {
+		background-color: var(--color-white-1);
+	}
+	& [class*="orange"] {
+		background-color: var(--color-orange-1);
+	}
 }

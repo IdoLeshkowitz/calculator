@@ -42,10 +42,11 @@ const initialState: CalcState = {
 	overwrite: true,
 	historyMode: true,
 	configMode: false,
-	styles :{
-		font : 'Arial',
-		bgColor: 'white'
-	}
+	styles: {
+		font: "Arial",
+		bgColor: "white",
+	},
+	history: [""],
 };
 
 const Calculator: React.FC = () => {
@@ -59,7 +60,8 @@ const Calculator: React.FC = () => {
 			overwrite,
 			historyMode,
 			configMode,
-			styles ,
+			styles,
+			history,
 		},
 		dispatch,
 	] = useReducer(reducer, initialState);
@@ -241,6 +243,7 @@ const Calculator: React.FC = () => {
 					),
 				className: "button-orange",
 				zone: "main",
+
 				func: () =>
 					dispatch({
 						type: ActionType.LIGHT_MODE_TOGGLE,
@@ -259,8 +262,13 @@ const Calculator: React.FC = () => {
 			},
 			{
 				key: "configMode",
-				gridArea: configMode===true ? "c-popup":"c",
-				displayed: configMode ===true ? <ConfigForm dispatch={dispatch}/> :<FcSettings className="icon" />,
+				gridArea: configMode === true ? "c-popup" : "c",
+				displayed:
+					configMode === true ? (
+						<ConfigForm dispatch={dispatch} />
+					) : (
+						<FcSettings className="icon" />
+					),
 				className: "button-orange config-form-box",
 				zone: "main",
 				func: () =>
@@ -284,76 +292,80 @@ const Calculator: React.FC = () => {
 	////////////////////////render ----->
 	return (
 		<div className={`page-box ${styles.bgColor}`}>
-		<div className={`calc-box ${styles.font}`}>
-			<div className="history-box">aqs</div>
-			<div className="main-box">
-				{/* display----> */}
-				<div
-					className={getButtonsClasses("display")}
-					grid-area="e">
-					<div className="previous-operand">
-						{overwrite
-							? previousOperand.value.toString()
-							: currentOperand}
+			<div className={`calc-box ${styles.font}`}>
+				<div className="history-box">
+					{history.map((item) => (
+						<div>{item}</div>
+					))}
+				</div>
+				<div className="main-box">
+					{/* display----> */}
+					<div
+						className={getButtonsClasses("display")}
+						grid-area="e">
+						<div className="previous-operand">
+							{previousOperand.expression}
+							{operation}
+							{overwrite ?'' : currentOperand}
+						</div>
 					</div>
+
+					{/* digits-----> */}
+					{createDigits()}
+
+					{/* operatores-----> */}
+					{createOperators()}
+
+					{/* backspace ---->*/}
+					<div
+						className="button-blue"
+						grid-area="f"
+						onClick={() =>
+							dispatch({ type: ActionType.DELETE_DIGIT })
+						}>
+						<TbArrowBackUp className="icon" />
+					</div>
+
+					{/* clear button----> */}
+					<div
+						className="button-blue"
+						grid-area="h"
+						onClick={() =>
+							dispatch({
+								type: ActionType.CLEAR,
+							})
+						}>
+						C
+					</div>
+
+					{/* ± button----> */}
+					<div
+						className="button-white"
+						grid-area="z"
+						onClick={() =>
+							dispatch({
+								type: ActionType.MINUS_PLUS,
+							})
+						}>
+						±
+					</div>
+
+					{/* = button -----> */}
+					<div
+						className="button-blue"
+						grid-area="ac"
+						onClick={() =>
+							dispatch({
+								type: ActionType.EVALUATE,
+							})
+						}>
+						=
+					</div>
+
+					{/* scientific mode button----> */}
+					{createFunctions()}
 				</div>
-
-				{/* digits-----> */}
-				{createDigits()}
-
-				{/* operatores-----> */}
-				{createOperators()}
-
-				{/* backspace ---->*/}
-				<div
-					className="button-blue"
-					grid-area="f"
-					onClick={() =>
-						dispatch({ type: ActionType.DELETE_DIGIT })
-					}>
-					<TbArrowBackUp className="icon" />
-				</div>
-
-				{/* clear button----> */}
-				<div
-					className="button-blue"
-					grid-area="h"
-					onClick={() =>
-						dispatch({
-							type: ActionType.CLEAR,
-						})
-					}>
-					C
-				</div>
-
-				{/* ± button----> */}
-				<div
-					className="button-white"
-					grid-area="z"
-					onClick={() =>
-						dispatch({
-							type: ActionType.MINUS_PLUS,
-						})
-					}>
-					±
-				</div>
-
-				{/* = button -----> */}
-				<div
-					className="button-blue"
-					grid-area="ac"
-					onClick={() =>
-						dispatch({
-							type: ActionType.EVALUATE,
-						})
-					}>
-					=
-				</div>
-
-				{/* scientific mode button----> */}
-				{createFunctions()}
 			</div>
-		</div>
 		</div>
 	);
 };
