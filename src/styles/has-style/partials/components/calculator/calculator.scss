@@ -7,17 +7,19 @@
 
 .calc-box {
 	position: relative;
-	display: flex;
-	@media (max-width: 600px) {
-		flex-direction: column;
+	display:grid;
+	@media #{$break1}{
+		grid-template-columns: 1fr;
+		grid-template-rows: 400px 200px auto;
 	}
-	@media (min-width: 601px) {
-		flex-direction: row;
+	@media #{$break2}{
+		grid-template-columns: 100px 400px 100px;
+		grid-template-rows: minmax(auto,500px);
 	}
 
 	& .history-box {
 	height:100%;
-	background-color: var(--color-white-1);
+	background-color: var(--color-orange-1);
     width:100px;
 	word-break: break-all;
 	display: flex;
