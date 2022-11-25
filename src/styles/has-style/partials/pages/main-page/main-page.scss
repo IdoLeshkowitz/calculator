@@ -1,33 +1,28 @@
-#root{
-    position :fixed;
-    top:0;
-    bottom:0;
-    right:0;
-    left:0;
+#root {
+    .white {
+        background-color: aqua;
+      }
+      .orange {
+        background-color: orange;
+      }
+      .blue {
+        background-color: blue;
+      }
+  .page-box {
+
+    overflow-y: visible;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    display:flex;
-    align-items: center;
-    justify-content: center;
-    .white {
-        background-color: aqua;
-    }
-    .orange {
-        background-color: orange;
-    }
-    .blue{
-        background-color: blue;
-    }
-    .page-box{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: absolute;
-        flex-direction: row-reverse;
-        top:0;
-        bottom: 0;
-        left:0;
-        right:0;
-    }
+    position: absolute;
+    flex-direction: row-reverse;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
 }
