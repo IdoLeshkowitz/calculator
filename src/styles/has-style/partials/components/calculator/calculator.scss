@@ -1,61 +1,64 @@
 //sciense
 
 //main
-@import "./calc-main/calc-main.scss";
+@import './calc-main/calc-main.scss';
 
 //history
 
 .calc-box {
-	position: relative;
-	display:grid;
-	@media #{$break1}{
-		grid-template-columns: 350px;
-		grid-template-rows: 400px  minmax(100px, auto) auto;
-	}
-	@media #{$break2}{
-		grid-template-columns: 100px 400px ;
-		grid-template-rows: minmax(auto,500px);
-	}
+  position: absolute;
+  display: grid;
+  @media #{$break1} {
+		overflow-y: scroll;
+		top: 0;
+    grid-template-columns: minmax(auto,350px);
+    grid-template-rows: 350px minmax(100px, auto) auto;
+    overflow-y: visible;
+  }
+  @media #{$break2} {
+    grid-template-columns: 100px 400px;
+    grid-template-rows: minmax(auto, 500px);
+  }
 
-	& .history-box {
-	height:100%;
-	background-color: var(--color-orange-1);
-	word-break: break-all;
-	display: flex;
-	flex-direction: column;
-	row-gap: 1rem;
-	align-items: flex-start;
-	// grid-row: 2;
-	@media #{$break1}{
-		grid-row: 2;
-	}
-	}
-	& div {
-		margin: 0;
-		border: none;
-		//cell display settings
-		& div {
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
-	}
+  & .history-box {
+    height: 100%;
+    background-color: var(--color-orange-1);
+    word-break: break-all;
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+    align-items: flex-start;
+    // grid-row: 2;
+    @media #{$break1} {
+      grid-row: 2;
+    }
+  }
+  & div {
+    margin: 0;
+    border: none;
+    //cell display settings
+    & div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
 
-	& [class*="blue"] {
-		background: linear-gradient(
-			0.25turn,
-			var(--color-blue-1),
-			var(--color-blue-2)
-		);
-		//background-color: var(--color-blue-1);
-	}
-	& [class*="yellow"] {
-		background-color: var(--color-yellow-1);
-	}
-	& [class*="white"] {
-		background-color: var(--color-white-1);
-	}
-	& [class*="orange"] {
-		background-color: var(--color-orange-1);
-	}
+  & [class*='blue'] {
+    background: linear-gradient(
+      0.25turn,
+      var(--color-blue-1),
+      var(--color-blue-2)
+    );
+    //background-color: var(--color-blue-1);
+  }
+  & [class*='yellow'] {
+    background-color: var(--color-yellow-1);
+  }
+  & [class*='white'] {
+    background-color: var(--color-white-1);
+  }
+  & [class*='orange'] {
+    background-color: var(--color-orange-1);
+  }
 }
