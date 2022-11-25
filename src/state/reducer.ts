@@ -15,6 +15,8 @@ export type Digit =
 	| "9"
 	| "0"
 	| ".";
+export type Font = |'Arial'|'Roboto';
+export type BgColor = |'blue'|'white';
 //Calcstate interface definement
 export abstract class CalcState {
 	currentOperand: string | undefined; //last entered number or 0
@@ -27,6 +29,12 @@ export abstract class CalcState {
 	lightMode: boolean;
 	scientific: boolean;
 	overwrite: boolean;
+	historyMode: boolean;
+	configMode: boolean;
+    styles : {
+        font : string ;
+        bgColor:string; 
+    }
 }
 const evaluate = (state: CalcState): Number => {
 	console.log(state);
@@ -59,6 +67,32 @@ export const reducer = (
 	action: Action
 ): CalcState => {
 	switch (action.type) {
+        case ActionType.SET_BGCOLOR:
+            return {
+                ...state ,
+                styles:{
+                    ...state.styles,
+                    bgColor : action.payload
+                }
+            }
+        case ActionType.SET_FONT:
+            return {
+                ...state, 
+                styles:{
+                    ...state.styles ,
+                    font: action.payload
+                }
+            }
+		case ActionType.CONFIG_MODE_TOGGLE:
+			return {
+				...state,
+				configMode: !state.configMode,
+			};
+		case ActionType.HISTORY_MODE_TOGGLE:
+			return {
+				...state,
+				historyMode: !state.historyMode,
+			};
 		case ActionType.SCIENTIFIC_MODE_TOGGLE:
 			return {
 				...state,

@@ -1,13 +1,14 @@
 @import "./main-end/main-end.scss";
 @import "./main-start/main-start.scss";
 .main-box {
-  position: absolute;
-  top: 0;
+  position:relative;
+  top:0;
   bottom: 0;
-  left: 0;
-  right: 0;
+  right:0;
+  left:0;
   display: grid;
-  max-width: 400px;;
+  width: 300px;
+  height: 400px;
   grid-template-areas:
     "a b b b c"
     "d e e e f"
@@ -67,6 +68,12 @@
   }
   & div[grid-area="c"] {
     grid-area: c;
+  }
+  & div[grid-area="c-popup"] {
+    grid-area: c;
+    grid-row:1/ span 3 ;
+    grid-column: 6/1;
+    z-index: 1;
   }
   & div[grid-area="d"] {
     grid-area: d;

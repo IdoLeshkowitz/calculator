@@ -23,8 +23,11 @@ import { HiOutlineLightBulb } from "react-icons/hi";
 import {
 	AiOutlinePlus,
 	AiOutlineVerticalAlignBottom,
+	AiOutlineHistory,
 } from "react-icons/ai";
 import { IconType } from "react-icons/lib";
+import { type } from "os";
+import ConfigForm from "./configForm";
 
 //initial calc state
 const initialState: CalcState = {
@@ -37,8 +40,13 @@ const initialState: CalcState = {
 	lightMode: false,
 	scientific: false,
 	overwrite: true,
+	historyMode: true,
+	configMode: false,
+	styles :{
+		font : 'Arial',
+		bgColor: 'white'
+	}
 };
-
 
 const Calculator: React.FC = () => {
 	const [
@@ -49,6 +57,9 @@ const Calculator: React.FC = () => {
 			currentOperand,
 			operation,
 			overwrite,
+			historyMode,
+			configMode,
+			styles ,
 		},
 		dispatch,
 	] = useReducer(reducer, initialState);
@@ -235,6 +246,28 @@ const Calculator: React.FC = () => {
 						type: ActionType.LIGHT_MODE_TOGGLE,
 					}),
 			},
+			{
+				key: "historyMode",
+				gridArea: "g",
+				displayed: <AiOutlineHistory className="icon" />,
+				className: "button-orange",
+				zone: "main",
+				func: () =>
+					dispatch({
+						type: ActionType.HISTORY_MODE_TOGGLE,
+					}),
+			},
+			{
+				key: "configMode",
+				gridArea: configMode===true ? "c-popup":"c",
+				displayed: configMode ===true ? <ConfigForm dispatch={dispatch}/> :<FcSettings className="icon" />,
+				className: "button-orange config-form-box",
+				zone: "main",
+				func: () =>
+					dispatch({
+						type: ActionType.CONFIG_MODE_TOGGLE,
+					}),
+			},
 		];
 		return functions.map((func) => {
 			return (
@@ -250,7 +283,9 @@ const Calculator: React.FC = () => {
 	};
 	////////////////////////render ----->
 	return (
-		<div className="calc-box">
+		<div className={`page-box ${styles.bgColor}`}>
+		<div className={`calc-box ${styles.font}`}>
+			<div className="history-box">aqs</div>
 			<div className="main-box">
 				{/* display----> */}
 				<div
@@ -259,7 +294,7 @@ const Calculator: React.FC = () => {
 					<div className="previous-operand">
 						{overwrite
 							? previousOperand.value.toString()
-							:currentOperand }
+							: currentOperand}
 					</div>
 				</div>
 
@@ -318,6 +353,7 @@ const Calculator: React.FC = () => {
 				{/* scientific mode button----> */}
 				{createFunctions()}
 			</div>
+		</div>
 		</div>
 	);
 };

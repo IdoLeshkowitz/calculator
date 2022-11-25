@@ -7,4 +7,26 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    .white {
+        background-color: aqua;
+    }
+    .orange {
+        background-color: orange;
+    }
+    .blue{
+        background-color: blue;
+    }
+    .page-box{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        top:0;
+        bottom: 0;
+        left:0;
+        right:0;
+    }
 }

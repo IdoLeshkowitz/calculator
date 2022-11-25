@@ -6,4 +6,10 @@
     --color-orange-1:#f7cbac;
     --color-black-1:hsla(0, 0%, 10%, 0.8);
     --color-black-2:hsla(0, 0%, 30%, 0.6);
+    & div[bgcolor='blue']{
+        background-color: blue;
+    }
+    & div[bgcolor= 'orange']{
+        background-color: orange;
+    }
 }

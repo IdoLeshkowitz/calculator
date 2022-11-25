@@ -10,8 +10,6 @@
     outline: none;
     user-select: none;
     border: 1px solid rgba(0, 0, 0, 0.226);
-    font-size: 18px;
-    font-family: var(--font-family-1);
     & .icon{
       width: 40%;
       height:40%;
@@ -23,6 +21,10 @@
       opacity: 80%;
     }
 
+  }
+  .form-button{
+    width:30px;
+    height:10px;
   }
 }
 

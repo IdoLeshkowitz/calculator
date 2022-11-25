@@ -1,5 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-.calc-box{
-    --font-size-1:20px;
-    --font-family-1:'roboto' , san-serif;
+
+
+#root{
+    & div[class*='Arial']{
+        font-family:Arial, Helvetica, sans-serif;
+    }
+    & div[class*='Roboto']{
+        font-family:Verdana, Geneva, Tahoma, sans-serif;
+    }
+
 }
