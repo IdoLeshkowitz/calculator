@@ -1,5 +1,5 @@
 import  * as React from "react";
-import { Actions } from "../Calculator";
+import { ActionType } from "../../../state/index";
 interface OprationProps{
   dispatch : Function ; 
   operation : string ; 
@@ -13,7 +13,7 @@ function OperationButton(props:OprationProps): JSX.Element {
       className={props.className}
       grid-area={props.gridArea}
       onClick={() =>
-        props.dispatch({ type: Actions.CHOOSE_OPERATION, payload: props.operation })
+        props.dispatch({ type: ActionType.SET_OPERATION, payload: props.operation })
       }
     >
       {props.displayed}

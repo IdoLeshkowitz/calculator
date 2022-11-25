@@ -1,4 +1,10 @@
 import * as React from "react";
+import {
+	Action,
+	ActionType,
+	CalcState,
+	reducer,
+} from "./../../state/index";
 import { useState, useReducer } from "react";
 import OperationButton from "./operationButton/OperationButton";
 import DigitButton from "./digitButton/DigitButton";
@@ -19,274 +25,30 @@ import {
 	AiOutlineVerticalAlignBottom,
 } from "react-icons/ai";
 import { IconType } from "react-icons/lib";
-// state reducer actions interface
-export enum Actions {
-	ADD_DIGIT = "add-digit",
-	CHOOSE_OPERATION = "choose-operation",
-	CLEAR = "clear",
-	DELETE_DIGIT = "delete-digit",
-	EVALUATE = "evaluate",
-	MINUS_PLUS = "minus-plus",
-	LIGHT_MODE_TOGGLE = "light-mode-toggle",
-	SCIENTIFIC_MODE_TOGGLE = "scietific-mode-toggle",
-}
-
-//Calcstate interface definement
-abstract class CalcState {
-	currentOperand: string;
-	previousOperand: string;
-	operation: string;
-	lightMode: "dark" | "light";
-	scientific: boolean;
-	overwrite: boolean;
-}
 
 //initial calc state
 const initialState: CalcState = {
-	currentOperand: "",
-	previousOperand: "",
-	operation: "",
-	lightMode: "light",
+	currentOperand: undefined,
+	previousOperand: {
+		expression: undefined,
+		value: 0,
+	},
+	operation: undefined,
+	lightMode: false,
 	scientific: false,
-	overwrite: false,
+	overwrite: true,
 };
-type payload =
-	| CalcState["operation"]
-	| CalcState["currentOperand"]
-	| "";
-// reducer action type definement
-interface CalcAction {
-	payload: payload;
-	type:
-		| Actions.CLEAR
-		| Actions.DELETE_DIGIT
-		| Actions.EVALUATE
-		| Actions.LIGHT_MODE_TOGGLE
-		| Actions.MINUS_PLUS
-		| Actions.SCIENTIFIC_MODE_TOGGLE
-		| Actions.ADD_DIGIT
-		| Actions.CHOOSE_OPERATION;
-}
-
-//reducer function ----->
-function reducer(
-	state: CalcState,
-	action: CalcAction
-): CalcState {
-	switch (action.type) {
-		case Actions.SCIENTIFIC_MODE_TOGGLE:
-			if (!state.scientific) {
-				return {
-					...state,
-					lightMode: state.lightMode,
-					scientific: true,
-				};
-			}
-			return {
-				...state,
-				lightMode: state.lightMode,
-				scientific: false,
-			};
-
-		case Actions.LIGHT_MODE_TOGGLE:
-			let modes: CalcState["lightMode"][] = [
-				"dark",
-				"light",
-			];
-			// if current light mode state is empty set it to dark
-			if (!state.lightMode) {
-				return {
-					...state,
-					lightMode: "dark",
-				};
-			}
-			return {
-				...state,
-				lightMode:
-					modes[1 - modes.indexOf(state.lightMode)],
-			};
-
-		case Actions.MINUS_PLUS:
-			//if current operand is null continue else update it
-			if (state.currentOperand) {
-				return {
-					...state,
-					currentOperand: (
-						parseFloat(state.currentOperand) * -1
-					).toString(),
-				};
-			}
-			// if previous operand is null  update it
-			if (state.previousOperand) {
-				return {
-					...state,
-					previousOperand: (
-						parseFloat(state.previousOperand) * -1
-					).toString(),
-				};
-			}
-			//else do nothing
-			return state;
-		case Actions.ADD_DIGIT:
-			//if current operand is 0 override it
-			if (state.currentOperand === "0") {
-				return {
-					...state,
-					currentOperand: action.payload,
-				};
-			}
-
-			// if digit is decimal point
-			if (
-				action.payload === "." &&
-				state.currentOperand && 
-				state.currentOperand.includes(".")
-			) {
-				//if current operand conatins decimal or its none do nothing
-				return state;
-			}
-			console.log('ddd');
-			return {
-				...state,
-				currentOperand: `${state.currentOperand || ""}${
-					action.payload
-				}`,
-			};
-
-		case Actions.CHOOSE_OPERATION:
-			//if both operands are empty do nothing
-			if (
-				state.currentOperand == "" &&
-				state.previousOperand == ""
-			) {
-				return state;
-			}
-
-			//if only current operand is empty update operation to new value
-			if (state.currentOperand == "") {
-				return {
-					...state,
-					operation: action.payload,
-				};
-			}
-
-			// if (state.previousOperand == '') {
-			// 	return {
-			// 		...state,
-			// 		operation: action.payload,
-			// 		previousOperand: state.currentOperand,
-			// 		currentOperand: "",
-			// 	};
-			// }
-
-			if (!state.scientific) {
-				//if scietific mode is off override the previous operand
-				return {
-					...state,
-					previousOperand: eval(
-						state.previousOperand +
-							state.operation +
-							state.currentOperand
-					),
-					operation: action.payload,
-					currentOperand: "",
-				};
-			} else {
-				//if scientific mode is on append operation to previous operand
-				return {
-					...state,
-					previousOperand:
-						state.previousOperand +
-						state.operation +
-						state.currentOperand,
-					currentOperand: "",
-					operation: action.payload,
-				};
-			}
-
-		case Actions.CLEAR:
-			return {
-				...initialState,
-				scientific: state.scientific,
-				lightMode: state.lightMode,
-			};
-		case Actions.DELETE_DIGIT:
-			if (state.overwrite) {
-				return {
-					...state,
-					overwrite: false,
-					currentOperand: "",
-				};
-			}
-			if (state.currentOperand == "") return state;
-			if (state.currentOperand.length === 1) {
-				return { ...state, currentOperand: "" };
-			}
-
-			return {
-				...state,
-				currentOperand: state.currentOperand.slice(0, -1),
-			};
-		case Actions.EVALUATE:
-			if (
-				state.operation == "" ||
-				state.currentOperand == "" ||
-				state.previousOperand == ""
-			) {
-				return state;
-			}
-
-			return {
-				...state,
-				overwrite: true,
-				previousOperand: "",
-				operation: "",
-				currentOperand: eval(
-					state.previousOperand +
-						state.operation +
-						state.currentOperand
-				),
-			};
-	}
-}
 
 
-
-function formatCurrOperand(operand: string) {
-	// if (operand == null) return;
-	// const [integer, decimal] = operand.toString().split(".");
-	// if (decimal == null) return INTEGER_FORMATTER.format(integer);
-	// return `${INTEGER_FORMATTER.format(integer)}.${decimal}`;
-}
-
-function formatOperand(
-	operand: string,
-	isScientific: boolean
-) {
-	let output='';
-	if (!isScientific) {
-		output= operand;
-	} else {
-		output= eval(operand) || "";
-	}
-	output=output.toString();
-	return output.startsWith('Infinity') ? 'zero division':output;
-	//return output === 'infinity' ?  'cannot devide by zero' : output;
-	//return eval(operand);
-	// if (operand == null) return;
-	// const [integer, decimal] = operand.toString().split(".");
-	// if (decimal == null) return INTEGER_FORMATTER.format(integer);
-	// return `${INTEGER_FORMATTER.format(integer)}.${decimal}`;
-}
-function Calculator(): JSX.Element {
+const Calculator: React.FC = () => {
 	const [
 		{
-			currentOperand,
 			previousOperand,
-			operation,
 			lightMode,
 			scientific,
-
+			currentOperand,
+			operation,
+			overwrite,
 		},
 		dispatch,
 	] = useReducer(reducer, initialState);
@@ -424,8 +186,7 @@ function Calculator(): JSX.Element {
 				let styleClasses = "button display-box";
 				// if mode is not defined set as light mode
 				if (!lightMode) return styleClasses + " light";
-				if (lightMode === "dark")
-					return styleClasses + " dark";
+				else return styleClasses + " dark";
 				return styleClasses + " light";
 			},
 		};
@@ -455,15 +216,14 @@ function Calculator(): JSX.Element {
 				zone: "main",
 				func: () =>
 					dispatch({
-						type: Actions.SCIENTIFIC_MODE_TOGGLE,
-						payload: "",
+						type: ActionType.SCIENTIFIC_MODE_TOGGLE,
 					}),
 			},
 			{
 				key: "lightMode",
 				gridArea: "d",
 				displayed:
-					lightMode === "dark" ? (
+					lightMode === true ? (
 						<HiOutlineLightBulb className="icon" />
 					) : (
 						<TbBulbOff className="icon" />
@@ -472,8 +232,7 @@ function Calculator(): JSX.Element {
 				zone: "main",
 				func: () =>
 					dispatch({
-						type: Actions.LIGHT_MODE_TOGGLE,
-						payload: "",
+						type: ActionType.LIGHT_MODE_TOGGLE,
 					}),
 			},
 		];
@@ -498,13 +257,9 @@ function Calculator(): JSX.Element {
 					className={getButtonsClasses("display")}
 					grid-area="e">
 					<div className="previous-operand">
-						{formatOperand(
-							previousOperand,
-							scientific
-						) + operation}
-					</div>
-					<div className="current-operand">
-						{formatOperand( currentOperand, scientific)}
+						{overwrite
+							? previousOperand.value.toString()
+							:currentOperand }
 					</div>
 				</div>
 
@@ -519,10 +274,7 @@ function Calculator(): JSX.Element {
 					className="button-blue"
 					grid-area="f"
 					onClick={() =>
-						dispatch({
-							type: Actions.DELETE_DIGIT,
-							payload: "",
-						})
+						dispatch({ type: ActionType.DELETE_DIGIT })
 					}>
 					<TbArrowBackUp className="icon" />
 				</div>
@@ -533,8 +285,7 @@ function Calculator(): JSX.Element {
 					grid-area="h"
 					onClick={() =>
 						dispatch({
-							type: Actions.CLEAR,
-							payload: "",
+							type: ActionType.CLEAR,
 						})
 					}>
 					C
@@ -546,8 +297,7 @@ function Calculator(): JSX.Element {
 					grid-area="z"
 					onClick={() =>
 						dispatch({
-							type: Actions.MINUS_PLUS,
-							payload: "",
+							type: ActionType.MINUS_PLUS,
 						})
 					}>
 					±
@@ -559,8 +309,7 @@ function Calculator(): JSX.Element {
 					grid-area="ac"
 					onClick={() =>
 						dispatch({
-							type: Actions.EVALUATE,
-							payload: "",
+							type: ActionType.EVALUATE,
 						})
 					}>
 					=
@@ -571,6 +320,6 @@ function Calculator(): JSX.Element {
 			</div>
 		</div>
 	);
-}
+};
 
 export default Calculator;

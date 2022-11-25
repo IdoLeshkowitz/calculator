@@ -1,13 +1,13 @@
 import * as React from "react";
 import { FC } from "react";
-import { Actions } from "../Calculator";
-
+import {ActionType} from './../../../state/index';
 interface Props {
 	dispatch: Function;
 	digit: string | ".";
 	gridArea: string;
 	className: string;
 }
+
 function DigitButton(props: Props): JSX.Element {
 	return (
 		<div
@@ -15,7 +15,7 @@ function DigitButton(props: Props): JSX.Element {
 			grid-area={props.gridArea}
 			onClick={() =>
 				props.dispatch({
-					type: Actions.ADD_DIGIT,
+					type:ActionType.ADD_DIGIT,
 					payload: props.digit,
 				})
 			}>
